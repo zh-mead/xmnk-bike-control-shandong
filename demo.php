@@ -6,7 +6,7 @@ use ZhMead\XmnkBikeControl;
 use ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
 
 $config = [
-    'gateways' => [
+    'registerGateways' => [
         'tbit' => [
             'registerAddress' => '127.0.0.1:12238'
         ],
@@ -17,10 +17,11 @@ $config = [
 //            'registerAddress' => '127.0.0.1:12238'
 //        ],
     ],
+    'defaultGateway' => DeviceMap::TBit,
     'redis' => [
 
     ],
-    'default_gateway' => 'tbit'
+
 ];
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);

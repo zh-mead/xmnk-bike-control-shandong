@@ -36,7 +36,7 @@ class BikeControl
      */
     public function init(array $configs)
     {
-        $gateways = $configs['gateways'];
+        $gateways = $configs['registerGateways'];
 
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
             $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress']);
@@ -55,8 +55,8 @@ class BikeControl
             throw new \Exception('必须配置一个中控');
         }
 
-        if (!array_key_exists('default_gateway', $configs)) $configs['default_gateway'] = $this->controlKeys[0];
-        $this->defaultGateway = $configs['default_gateway'];
+        if (!array_key_exists('defaultGateway', $configs)) $configs['defaultGateway'] = $this->controlKeys[0];
+        $this->defaultGateway = $configs['defaultGateway'];
         return $this;
     }
 
