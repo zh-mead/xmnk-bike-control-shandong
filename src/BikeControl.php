@@ -2,7 +2,6 @@
 
 namespace ZhMead\XmnkBikeControl;
 
-use ZhMead\XmnkBikeControl\Common\ControlInterface;
 use ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
 
 /**

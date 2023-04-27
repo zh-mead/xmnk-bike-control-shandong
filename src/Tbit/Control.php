@@ -3,10 +3,12 @@
 namespace ZhMead\XmnkBikeControl\Tbit;
 
 use GatewayClient\Gateway;
+use ZhMead\XmnkBikeControl\Common\ControlInterface;
+use ZhMead\XmnkBikeControl\Common\Maps\BaseMap;
 use ZhMead\XmnkBikeControl\Tbit\Maps\CmdMap;
 use ZhMead\XmnkBikeControl\Tbit\Maps\VideoMap;
 
-class Control
+class Control implements ControlInterface
 {
     private static $start = 'AA AA';
     //分割符
@@ -20,6 +22,19 @@ class Control
     }
 
     /**
+     * 寻车响铃
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function bell($box_no)
+    {
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_FIND_BIKE);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
+        return $this->send($box_no, $str);
+    }
+
+    /**
      * 开车
      * @param $box_no
      * @return bool
@@ -27,9 +42,9 @@ class Control
      */
     public function openLock($box_no, $sync = false)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_UNLOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
-        self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_UNLOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
+        $this->send($box_no, $str);
         return true;
     }
 
@@ -39,11 +54,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function closeLock($box_no)
+    public function closeLock($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_LOCK, $msg_id);
-        self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_LOCK, $msg_id);
+        $this->send($box_no, $str);
         return true;
     }
 
@@ -53,11 +68,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function temporaryCloseLock($box_no)
+    public function temporaryCloseLock($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
-        self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
+        $this->send($box_no, $str);
         return true;
     }
 
@@ -67,11 +82,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function temporaryOpnLock($box_no)
+    public function temporaryOpnLock($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
-        self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
+        $this->send($box_no, $str);
         return true;
     }
 
@@ -81,11 +96,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function bellBike($box_no)
+    public function bellBike($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_FIND_BIKE);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_FIND_BIKE);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -94,11 +109,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function openBatteryLock($box_no)
+    public function openBatteryLock($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK, $msg_id);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -107,11 +122,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function closeBatteryLock($box_no)
+    public function closeBatteryLock($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK, $msg_id);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -120,9 +135,9 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function outAreaPlayVideo($box_no)
+    public function outAreaPlayVideo($box_no)
     {
-        return self::playVideo($box_no, VideoMap::VIDEO_OUT_AREA);
+        return $this->playVideo($box_no, VideoMap::VIDEO_OUT_AREA);
     }
 
     /**
@@ -132,11 +147,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function playVideo($box_no, $video_cmd)
+    public function playVideo($box_no, $video_cmd)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', $video_cmd);
-        $str = self::makeSendMsg($video_cmd, $msg_id, CmdMap::CMD_REMOTE_VOICE);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', $video_cmd);
+        $str = $this->makeSendMsg($video_cmd, $msg_id, CmdMap::CMD_REMOTE_VOICE);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -145,11 +160,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function outAreaLoseElectric($box_no)
+    public function outAreaLoseElectric($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
-        $str = self::makeSendMsg(CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -158,11 +173,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function outAreaGetElectric($box_no)
+    public function outAreaGetElectric($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
-        $str = self::makeSendMsg(CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -171,13 +186,13 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function selectBoxSetting($box_no)
+    public function selectBoxSetting($box_no)
     {
         $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
 //        $select = ['SOFTVERSION', 'TID', 'BLEKG', 'LOGIN', 'DFTBLEENCKEY', 'DFTBLEENCKEY', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_SELECT);
-        $str = self::makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_SELECT);
+        $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -186,12 +201,12 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function selectBikeStatus($box_no)
+    public function selectBikeStatus($box_no)
     {
         $select = ['DEVICESTATUS', 'PHASESTATUS'];
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_SELECT);
-        $str = self::makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_SELECT);
+        $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -200,11 +215,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function rebootBox($box_no)
+    public function rebootBox($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM, $msg_id);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -213,13 +228,13 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function nowBikeLocation($box_no)
+    public function nowBikeLocation($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_LOCATION);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_REMOTE_LOCATION);
         //删除ridis位置缓存
-        self::delRedisCache($box_no, 'update_bike_location');
-        $str = self::makeSendMsg(CmdMap::CONTROL_REMOTE_LOCATION, $msg_id);
-        return self::send($box_no, $str);
+        $this->delRedisCache($box_no, 'update_bike_location');
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_LOCATION, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -228,15 +243,15 @@ class Control
      * @return bool
      * Author: Mead
      */
-    public static function nowBikeUpLocation($box_no, $sync = false)
+    public function nowBikeUpLocation($box_no, $sync = false)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_NOW_UP_LOCATION);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_NOW_UP_LOCATION);
         //删除ridis位置缓存
-        $str = self::makeSendMsg(CmdMap::CONTROL_NOW_UP_LOCATION, $msg_id);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_NOW_UP_LOCATION, $msg_id);
         if ($sync) {
-            return self::sendSync($box_no, $str, "CONTROL_NOW_UP_LOCATION:{$box_no}");
+            return $this->sendSync($box_no, $str, "CONTROL_NOW_UP_LOCATION:{$box_no}");
         } else {
-            return self::send($box_no, $str);
+            return $this->send($box_no, $str);
         }
     }
 
@@ -246,11 +261,11 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function nowBikeBatteryMSG($box_no)
+    public function nowBikeBatteryMSG($box_no)
     {
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CONTROL_GET_BATTERY_INFO);
-        $str = self::makeSendMsg(CmdMap::CONTROL_GET_BATTERY_INFO, $msg_id);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CONTROL_GET_BATTERY_INFO);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_GET_BATTERY_INFO, $msg_id);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -259,12 +274,12 @@ class Control
      * @return bool
      * User: Mead
      */
-    public static function setBoxSetting($box_no)
+    public function setBoxSetting($box_no)
     {
         $select = ['PULSE=120', 'FREQ=15', 'VIBFILTERREMINDT=20', 'DFTBLEBONDKEY=NULL', 'BLEKG=1'];
-        $msg_id = self::makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_CONFIG);
-        $str = self::makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_CONFIG, false);
-        return self::send($box_no, $str);
+        $msg_id = $this->makeMsgId($box_no, 'C', CmdMap::CMD_REMOTE_CONFIG);
+        $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_CONFIG, false);
+        return $this->send($box_no, $str);
     }
 
     /**
@@ -295,21 +310,21 @@ class Control
      * @return bool
      * Author: Mead
      */
-    private static function sendSync($box_no, $msg, $msg_id)
+    private function sendSync($box_no, $msg, $msg_id)
     {
-        Gateway::$registerAddress = config('bike.bike_control_register_address');
+        Gateway::$registerAddress = self::$registerAddress;
         if (!Gateway::isUidOnline($box_no)) return false;
         Gateway::sendToUid($box_no, hex2bin($msg));
 
-        $redis = Redis::connection();
+        $redis = \Redis::connection();
         $response = false;
 
         for ($i = 0; $i <= 30; $i++) {
             sleep(1);
-            $data = $redis->get(self::CACHE_KEY . ':' . $msg_id);
+            $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msg_id);
 
             if ($data) {
-                $response = self::decodeData($data);
+                $response = $this->decodeData($data);
                 break;
             }
             if (in_array($i, [5, 10, 15, 20])) {
@@ -323,32 +338,11 @@ class Control
     /**
      * 解析车辆返回数据
      * @param $data
-     * @return bool|mixed
+     * @return mixed
      */
-    public static function decodeData($data, $decode = true)
+    public function decodeData($data, $decode = true)
     {
-//        Log::error($data);
-//        $array = explode('||', $data);
-//        if (count($array) !== 2) return false;
-//        list($type, $value) = $array;
-//        Log::error($value);
-//        Log::error($type);
-//        if (!$decode) return $value;
-//        switch ($type) {
-//            case 'string':
-//                return $value;
-//                break;
-//            case 'bool':
-//                return (boolean)$data;
-//                break;
-//            case 'array':
-//                $a = json_decode($value);
-//                return object2array($a);
-//        }
         return json_decode($data, true);
-//        $d = json_decode($data, true);
-//        return $d['value'];
-//        return false;
     }
 
     /**
@@ -378,7 +372,7 @@ class Control
      * @return string
      * User: Mead
      */
-    public static function makeSendMsg($controller_cmd, $msgID, $cmd = CmdMap::CMD_REMOTE_CONTROL, $is_hex = true)
+    public function makeSendMsg($controller_cmd, $msgID, $cmd = CmdMap::CMD_REMOTE_CONTROL, $is_hex = true)
     {
         if (!$is_hex) {
             $controller_cmd = bin2hex((implode(';', $controller_cmd) . ';FUJIA'));
@@ -387,9 +381,9 @@ class Control
             "{$controller_cmd}",
             "{$msgID}"
         ];
-        $body = self::arr2arr($body);
+        $body = $this->arr2arr($body);
 
-        return self::encode($body, $cmd);
+        return $this->encode($body, $cmd);
     }
 
     /**
@@ -398,31 +392,31 @@ class Control
      * @return string
      * User: Mead
      */
-    private static function encode($data, $cmd)
+    private function encode($data, $cmd)
     {
         $num = 12;
         $num += count($data);
-        $data_length = self::byNumGetDataLength($num);
+        $data_length = $this->byNumGetDataLength($num);
         $header = [
             $data_length,
-            self::getSoftwareVersion(),
+            $this->getSoftwareVersion(),
             $cmd,
-            self::getPipelineNumber(),
+            $this->getPipelineNumber(),
             '00',
             '00',
             '00'
         ];
 
-        $response = self::arr2str($header, $data);
-        $response .= self::crc16(explode(' ', $response));
+        $response = $this->arr2str($header, $data);
+        $response .= $this->crc16(explode(' ', $response));
 
-        return self::format(self::$start . $response);
+        return $this->format(self::$start . $response);
     }
 
     /**
      * 获取数据包的长度
      * @param $num
-     * @return array
+     * @return String
      * User: Mead
      */
     private static function byNumGetDataLength($num)
@@ -457,7 +451,7 @@ class Control
      * @param $type
      * User: Mead
      */
-    public static function delRedisCache($box_no, $types)
+    public function delRedisCache($box_no, $types)
     {
         $cacheNames = [];
         if (is_array($types)) {
