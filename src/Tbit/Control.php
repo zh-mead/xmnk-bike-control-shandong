@@ -10,9 +10,9 @@ use ZhMead\XmnkBikeControl\Tbit\Maps\VideoMap;
 
 class Control implements ControlInterface
 {
-    private static $start = 'AA AA';
     //分割符
     const SPLIT_TAG = 'bbbb';
+    const START_TAG = 'AA AA';
 
     private static $registerAddress = '';
 
@@ -410,7 +410,7 @@ class Control implements ControlInterface
         $response = $this->arr2str($header, $data);
         $response .= $this->crc16(explode(' ', $response));
 
-        return $this->format(self::$start . $response);
+        return $this->format(self::START_TAG . $response);
     }
 
     /**
