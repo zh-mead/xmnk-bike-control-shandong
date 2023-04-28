@@ -31,11 +31,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function bell($box_no)
+    public function bell($box_no, $isSync = false)
     {
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync);
     }
 
     /**
@@ -293,14 +293,16 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    private static function send($box_no, $msg)
+    private static function send($box_no, $msg, $isSync = false)
     {
+        Gateway::$registerAddress = self::$registerAddress;
+        if (!Gateway::isUidOnline($box_no)) return false;
+
         try {
-            Gateway::$registerAddress = self::$registerAddress;
-//            if (!Gateway::isUidOnline($box_no)) return false;
-            var_dump('tbit:' . self::$registerAddress);
-            var_dump('tbit:' . $msg);
             Gateway::sendToUid($box_no, hex2bin($msg));
+
+
+
             return true;
         } catch (\Exception $exception) {
             throw new \Exception('服务连接失败');
@@ -331,7 +333,7 @@ class Control implements ControlInterface
                 $response = $this->decodeData($data);
                 break;
             }
-            if (in_array($i, [5, 10, 15, 20])) {
+            if (in_array($i, [3, 5, 10, 15, 20])) {
                 //重试一次
                 Gateway::sendToUid($box_no, hex2bin($msg));
             }
