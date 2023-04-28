@@ -35,7 +35,7 @@ interface ControlInterface
 
     public function selectBoxSetting($box_no, $isSync);
 
-    public function selectBikeStatus($box_no, $isSync);
+    public function selectBikeStatus($box_no, $setting = [], $isSync);
 
     public function rebootBox($box_no, $isSync);
 
@@ -43,5 +43,5 @@ interface ControlInterface
 
     public function nowBikeBatteryMSG($box_no, $isSync);
 
-    public function setBoxSetting($box_no, $isSync);
+    public function setBoxSetting($box_no, $setting = [], $is_result = false, $isSync);
 }

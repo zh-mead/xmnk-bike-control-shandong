@@ -96,6 +96,285 @@ class Control implements ControlInterface
     }
 
     /**
+     * 临时开锁
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function temporaryOpnLock($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
+        $param = [
+            'acc' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 寻车响铃
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function bellBike($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_CONTROL_VOICE_BROADCAST;
+        $param = [
+            'idx' => VoiceMap::WOZAIZHELI
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 打开电池锁
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function openBatteryLock($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_OPEN_BATTERY_COMPARTMENT_LOCK;
+        return $this->send($box_no, $cmd, $isSync);
+    }
+
+    /**
+     * 关闭电池锁
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function closeBatteryLock($box_no, $isSync = -1)
+    {
+        return true;
+    }
+
+    /**
+     * 超出骑行区域播放音乐
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function outAreaPlayVideo($box_no, $isSync = -1)
+    {
+        return $this->send($box_no, $isSync);
+    }
+
+    /**
+     * 播放语音
+     * @param $box_no
+     * @param $video_cmd
+     * @return bool
+     * User: Mead
+     */
+    public function playVideo($box_no, $video_cmd, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_CONTROL_VOICE_BROADCAST;
+        $param = [
+            'idx' => $video_cmd
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 超出骑行区域失能
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function outAreaLoseElectric($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
+        $param = [
+            'acc' => 0
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 超出区域后返回骑行区域加电
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function outAreaGetElectric($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
+        $param = [
+            'acc' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 查询车的配置
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
+    {
+        return false;
+    }
+
+    /**
+     * 查询车的状态
+     * @param $box_no
+     * @return
+     * User: Mead
+     *??
+     */
+    public function selectBikeStatus($box_no, $setting = [], $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        $num_code = self::getRandHex();
+        $key = "cmd:{$box_no}:{$num_code}";
+        return self::sendSync($box_no, self::encode($cmd, [], $num_code), $key);
+    }
+
+    /**
+     * 远程重启中控
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function rebootBox($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_DEVICE_RESTART;
+        return $this->send($box_no, $cmd, $isSync);
+    }
+
+    /**
+     * 立即定位
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function nowBikeLocation($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        return $this->send($box_no, $cmd, $isSync);
+    }
+
+    /**
+     * 融合定位包[蓝牙道钉]
+     * @param $box_no
+     * @return bool
+     * Author: Mead
+     */
+    public function nowBikeUpLocation($box_no, $sync = false, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        return $this->send($box_no, $cmd, $isSync);
+    }
+
+    /**
+     * 立即上传电池信息
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function nowBikeBatteryMSG($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        return $this->send($box_no, $cmd, $isSync);
+    }
+
+    /**
+     * 参数配置
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function setBoxSetting($box_no, $setting = [], $is_result = false, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+
+        $param[] = [];
+        if (array_key_exists('freq', $setting)) {
+            $param['freq_move'] = $setting['freq'];
+        }
+
+        if (array_key_exists('server', $setting)) {
+            $p['server'] = $setting['server'];
+            self::send($box_no, self::encode(CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p));
+        }
+
+        if (array_key_exists('maxecuspeed', $setting)) {
+            $index = 7;
+            $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
+            self::send($box_no, self::encode(CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2));
+        }
+
+        if (count($param)) {
+            return self::send($box_no, self::encode($cmd, $param));
+        }
+        return false;
+    }
+
+    /**
+     * 远程撤防
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function cheFang($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
+        $param = [
+            'defend' => 0
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 远程加锁
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function addLock($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
+        $param = [
+            'defend' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 播放超区语音
+     * @param $box_no
+     * @return bool
+     * Author: Mead
+     */
+    public function outAreaAutoPlayVideo($box_no, $isSync = -1)
+    {
+        return self::playVideo($box_no, VoiceMap::JINGGAO);
+    }
+
+    /**
+     * 进区关闭播放超区语音
+     * @param $box_no
+     * @return bool
+     * Author: Mead
+     */
+    public function inAreaAutoCloseVideo($box_no, $isSync = -1)
+    {
+        return false;
+    }
+
+    /**
+     * 打开头盔
+     * @param $box_no
+     * @return bool
+     * Author: Mead
+     */
+    public function openHelmetLock($box_no, $isSync = -1)
+    {
+        return false;
+    }
+
+    /**
      * 发送数据包
      * @param $box_no
      * @param $cmd
