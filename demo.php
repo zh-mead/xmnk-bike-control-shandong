@@ -27,6 +27,7 @@ $config = [
     ],
     'isSyncCmd' => false,
     'userTypeTag' => UserTypeMap::USER,
+    'isDev' => true,
 ];
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);

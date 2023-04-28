@@ -4,86 +4,99 @@ namespace ZhMead\XmnkBikeControl\Xiaoan\Maps;
 
 class CmdMap
 {
-    // 控制指令
-    const CMD_REMOTE_CONTROL = '06';
-    // 远程查询
-    const CMD_REMOTE_SELECT = '07';
-    // 播放语言指令
-    const CMD_REMOTE_VOICE = '0C';
-    //远程设置参数
-    const CMD_REMOTE_CONFIG = '08';
+    //设置防盗开关(cmd:4)
+    const COMMAND_ANTITHEFT_SWITCH = 4;
 
-    /**
-     * 控制指令（服务器下发）
-     */
-    //保留
-//    const CONTROL_DEFAULT = '00';
-    //远程设防(业务关锁)
-    const CONTROL_REMOTE_CLOSE_LOCK = '01';
-    // 远程撤防
-    const CONTROL_REMOTE_CHE_FANG = '02';
-    // 远程重启
-    const CONTROL_REMOTE_CHONG_QI = '03';
-    // 远程关机
-    const CONTROL_REMOTE_GUAN_JI = '04';
-    // 恢复出差设置
-    const CONTROL_HUI_FU_CHU_CHANG = '05';
-    // 保留
-//    const CONTROL_REMOTE_NO = '06';
-    // 保留
-//    const CONTROL_REMOTE_NO = '07';
-    // 立即定位
-    const CONTROL_REMOTE_LOCATION = '08';
-    //远程寻车(带寻车提示音)
-    const CONTROL_REMOTE_FIND_BIKE = '09';
-    // 远程重启蓝牙模块
-    const CONTROL_REMOTE_REBOOT_LAN_YA = '0A';
-    //远程开锁(业务开锁)
-    const CONTROL_REMOTE_UNLOCK = '0B';
-    //远程加锁
-    const CONTROL_REMOTE_SHUT_UNLOCK = '0C';
-    // 主动查询终端电池信息
-    const CONTROL_GET_BATTERY_INFO = '0D';
-    //主动查询控制器信息
-    const CONTROL_GET_BOX_INFO = '0E';
-    //远程打开电池锁
-    const CONTROL_REMOTE_OPEN_BATTERY_LOCK = '0F';
-    //远程关闭电池锁
-    const CONTROL_REMOTE_CLOSE_BATTERY_LOCK = '10';
-    //关闭远程寻车（待寻车提示音）
-    const CONTROL_REMOTE_CLOSE_BELL = '11';
-    //远程重启整个系统
-    const CONTROL_REMOTE_REBOOT_SYSTEM = '12';
-    //远程格式化主控制器
-    const CONTROL_REMOTE_FORMAT_BOX = '13';
-    //外部USB供电使能
-    const CONTROL_REMOTE_USB_OK = '14';
-    //外部USB供电失能
-    const CONTROL_REMOTE_USB_NO = '15';
-    //远程打开轮毂锁
-    const CONTROL_REMOTE_OPEN_HUB_LOCK = '16';
-    //远程关闭轮毂锁
-    const CONTROL_REMOTE_CLOSE_HUB_LOCK = '17';
+    //修改服务器地址(cmd:11)
+    const COMMAND_MODIFY_SERVER_ADDRESS = 11;
 
-//    const CONTROL_REMOTE_CLOSE_LOCK = '18';
-    //提示终端超出运营区域进行语音播报
-    const CONTROL_OUT_AREA_PLAY_VOICE = '19';
-    //提示终端进入运营区域关闭语音播放
-    const CONTROL_OUT_AREA_CLOSE_VOICE = '1A';
-    //出电子围栏直接失能ACC(仅限制在借车状态使用)
-    const CONTROL_OUT_AREA_LOST_ELECTRIC = '1B';
-    //入电子围栏直接使能ACC(仅限制在借车状态使用)
-    const CONTROL_OUT_AREA_OPEN_ELECTRIC = '1C';
-    // 打开后座
-    const CONTROL_REMOTE_OPEN_BACKSEAT = '20';
-    //关闭后座锁
-    const CONTROL_REMOTE_CLOSE_BACKSEAT = '21';
-    //远程临时关锁
-    const CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK = '30';
-    //远程临时开锁
-    const CONTROL_REMOTE_TEMPORARY_UNLOCK = '31';
-    //进入运输模式
-    const CONTROL_TRANSPORTATION_MODE = '32';
-    //立即上传融合定位包
-    const CONTROL_NOW_UP_LOCATION = '33';
+    //查询服务器地址(cmd:16)
+    const COMMAND_QUERY_SERVER_ADDRESS = 16;
+
+    //控制语音播报(cmd:14)
+    const COMMAND_CONTROL_VOICE_BROADCAST = 14;
+
+    //设备重启(cmd:21)
+    const COMMAND_DEVICE_RESTART = 21;
+
+    //开关后轮锁(cmd:28)
+    const COMMAND_REARWHEEL_LOCK = 28;
+
+    //设置蓝牙操作模式(cmd:26)
+    const COMMAND_BLUETOOTH_OPERATION_MODE = 26;
+
+    //打开电池仓锁(cmd:29)
+    const COMMAND_OPEN_BATTERY_COMPARTMENT_LOCK = 29;
+
+    //单条语音定制(cmd:30)
+    const COMMAND_SINGLE_VOICE_CUSTOMIZATION = 30;
+
+    //查询内部参数(cmd:31)
+    const COMMAND_QUERY_INTERNAL_PARAMETERS = 31;
+
+    //设置内部参数(cmd:32)
+    const COMMAND_SET_INTERNAL_PARAMETERS = 32;
+
+    //启动/熄火车辆(cmd:33)
+    const COMMAND_STARTORSTOP_VEHICLE = 33;
+
+    //查询设备状态信息(cmd:34)
+    const COMMAND_QUERY_DEVICE_STATUS_INFO = 34;
+
+    //远程升级(cmd:35)
+    const COMMAND_REMOTE_UPGRADE = 35;
+
+    //查询定制语音列表(cmd:36)
+    const COMMAND_QUERY_CUSTOM_VOICE_LIST = 36;
+
+    //开关电池仓锁(cmd:40)
+    const COMMAND_SWITCH_BATTERY_COMPARTMENT_LOCK = 40;
+
+    //获取BMS实时数据(cmd:41)
+    const COMMAND_OBTAIN_BMS_REALTIME_DATA = 41;
+
+    //获取BMS固定数据(cmd:42)
+    const COMMAND_OBTAIN_BMS_FIXED_DATA = 42;
+
+    //设置BMS参数(cmd:43)
+    const COMMAND_SET_BMS_PARAMETERS = 43;
+
+    //获取控制器数据(cmd:44)
+    const COMMAND_OBTAIN_CONTROLLER_DATA = 44;
+
+    //设置控制器限速(cmd:45)
+    const COMMAND_SET_CONTROLLER_SPEED_LIMIT = 45;
+
+    //设置控制器欠压值(cmd:46)
+    const COMMAND_SET_CONTROLLER_UNDERVOLTAGE = 46;
+
+    //设置控制器限流值(cmd:47)
+    const COMMAND_SET_CONTROLLER_CURRENT_LIMIT = 47;
+
+    //设置控制器缓启动(cmd:48)
+    const COMMAND_SET_CONTROLLER_SLOW_START = 48;
+
+    //设置蓝牙参数(cmd:49)
+    const COMMAND_SET_BLUETOOTH_PARAMETERS = 49;
+
+    //更新内置围栏数据(cmd:50)
+    const COMMAND_UPDATE_BUILT_FENCE_DATA = 50;
+
+    //开关控制器大灯(cmd:56)
+    const COMMAND_SWITCH_CONTROLLER_HEADLIGHT = 56;
+
+    //整套语音定制(cmd:57)
+    const COMMAND_COMPLETE_VOICE_CUSTOMIZATION = 57;
+
+    //获取基站定位(cmd:73)
+    const COMMAND_OBTAIN_BASE_STATION_POSITION = 73;
+
+    //获取基站信息(cmd:74)
+    const COMMAND_OBTAIN_BASE_STATION_INFO = 74;
+
+    //开关头盔锁(cmd:82)
+    const COMMAND_SWITCH_HELMET_LOCK = 82;
+
+    //查询蓝牙道钉信息(cmd:85)
+    const COMMAND_QUERY_BLUETOOTH_SPIKE_INFO = 85;
 }

@@ -56,18 +56,21 @@ class BikeControl
         $userTypeTag = UserTypeMap::USER;
         if (array_key_exists('userTypeTag', $configs)) $userTypeTag = $configs['userTypeTag'];
 
-        if(!array_key_exists('registerGateways',$configs)) throw new  \Exception('registerGateways找不到该配置项');
+        $isDev = false;
+        if (array_key_exists('isDev', $configs)) $isDev = $configs['isDev'];
+
+        if (!array_key_exists('registerGateways', $configs)) throw new  \Exception('registerGateways找不到该配置项');
         $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
-            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
+            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::TBit;
         }
         if (array_key_exists(DeviceMap::XiaoAn, $gateways)) {
-            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
+            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::XiaoAn;
         }
         if (array_key_exists(DeviceMap::WeiKeMu, $gateways)) {
-            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
+            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::WeiKeMu;
         }
 
