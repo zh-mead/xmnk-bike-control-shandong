@@ -94,7 +94,7 @@ class Control implements ControlInterface
         $msg = self::encode($cmd, $param, $msg_id);
 
         Gateway::$registerAddress = self::$registerAddress;
-        if (!Gateway::isUidOnline($box_no)) return false;
+//        if (!Gateway::isUidOnline($box_no)) return false;
 
         if ($isSync === -1) {
             $isSync = self::$isSync;
@@ -105,7 +105,6 @@ class Control implements ControlInterface
         try {
             if (self::$isDev) var_dump($msg);
             Gateway::sendToUid($box_no, hex2bin($msg));
-
             if ($isSync) {
                 //是否获取相应
                 $redis = self::$redis;
@@ -126,17 +125,15 @@ class Control implements ControlInterface
                 }
                 return $response;
             }
-            return true;
         } catch (\Exception $exception) {
             throw new \Exception('服务连接失败');
         }
 
-        $response = self::getBikeResponse($box_no, $msg_id);
-        return $response;
+        return true;
     }
 
     /**
-     * 效验编码
+     * 编码
      * @param $data
      * @return string
      * User: Mead

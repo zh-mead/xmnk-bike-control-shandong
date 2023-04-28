@@ -27,11 +27,11 @@ interface ControlInterface
 
     public function outAreaGetElectric($box_no, $isSync);
 
-    public function openHelmet($box_no, $isSync);
-
-    public function cloneHelmet($box_no, $isSync);
-
-    public function selectHelmetStatus($box_no, $isSync);
+//    public function openHelmet($box_no, $isSync);
+//
+//    public function cloneHelmet($box_no, $isSync);
+//
+//    public function selectHelmetStatus($box_no, $isSync);
 
     public function selectBoxSetting($box_no, $isSync);
 
