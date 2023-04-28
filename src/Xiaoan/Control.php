@@ -134,7 +134,8 @@ class Control implements ControlInterface
     public function openBatteryLock($box_no, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_OPEN_BATTERY_COMPARTMENT_LOCK;
-        return $this->send($box_no, $cmd, $isSync);
+        $param = [];
+        return $this->send($box_no, $cmd, $param, $isSync);
     }
 
     /**
@@ -211,7 +212,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
+    public function downBoxSetting($box_no, $setting = [], $isSync = -1)
     {
         return false;
     }
@@ -240,7 +241,8 @@ class Control implements ControlInterface
     public function rebootBox($box_no, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_DEVICE_RESTART;
-        return $this->send($box_no, $cmd, $isSync);
+        $param = [];
+        return $this->send($box_no, $cmd, $param, $isSync);
     }
 
     /**
@@ -252,7 +254,8 @@ class Control implements ControlInterface
     public function nowBikeLocation($box_no, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
-        return $this->send($box_no, $cmd, $isSync);
+        $param = [];
+        return $this->send($box_no, $cmd, $param, $isSync);
     }
 
     /**
@@ -264,7 +267,8 @@ class Control implements ControlInterface
     public function nowBikeUpLocation($box_no, $sync = false, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
-        return $this->send($box_no, $cmd, $isSync);
+        $param = [];
+        return $this->send($box_no, $cmd, $param, $isSync);
     }
 
     /**
@@ -350,7 +354,7 @@ class Control implements ControlInterface
      */
     public function outAreaAutoPlayVideo($box_no, $isSync = -1)
     {
-        return self::playVideo($box_no, VoiceMap::JINGGAO);
+        return $this->playVideo($box_no, VideoMap::NEAR_SERVICE_AREA_SOUND, $isSync);
     }
 
     /**
