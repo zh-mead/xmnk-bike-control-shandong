@@ -15,10 +15,14 @@ class Control implements ControlInterface
     const START_TAG = 'AA AA';
 
     private static $registerAddress = '';
+    protected $isSync = false;
+    protected $userTypeTag = 'C';
 
-    public function __construct($registerAddress)
+    public function __construct($registerAddress, $isSync = false, $userTypeTag = 'C')
     {
         self::$registerAddress = $registerAddress;
+        $this->isSync = $isSync;
+        $this->userTypeTag = $userTypeTag;
     }
 
     /**
