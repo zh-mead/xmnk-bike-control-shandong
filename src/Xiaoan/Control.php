@@ -80,6 +80,22 @@ class Control implements ControlInterface
     }
 
     /**
+     * 临时关锁
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function temporaryCloseLock($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
+        $param = [
+            'defend' => 1,
+            'force' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
      * 发送数据包
      * @param $box_no
      * @param $cmd
