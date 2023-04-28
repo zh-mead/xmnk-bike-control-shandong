@@ -156,7 +156,7 @@ class Control implements ControlInterface
      */
     public function outAreaPlayVideo($box_no, $isSync = -1)
     {
-        return $this->send($box_no, $isSync);
+        return $this->playVideo($box_no, VideoMap::NEAR_SERVICE_AREA_SOUND, $isSync);
     }
 
     /**
@@ -276,7 +276,8 @@ class Control implements ControlInterface
     public function nowBikeBatteryMSG($box_no, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
-        return $this->send($box_no, $cmd, $isSync);
+        $param = [];
+        return $this->send($box_no, $cmd, $param, $isSync);
     }
 
     /**
