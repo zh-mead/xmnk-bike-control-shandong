@@ -17,12 +17,14 @@ class Control implements ControlInterface
     private static $registerAddress = '';
     protected static $isSync = false;
     protected static $userTypeTag = 'C';
+    protected static $redis = false;
 
-    public function __construct($registerAddress, $isSync = false, $userTypeTag = 'C')
+    public function __construct($registerAddress, $redis, $isSync = false, $userTypeTag = 'C')
     {
         self::$registerAddress = $registerAddress;
         self::$isSync = $isSync;
         self::$userTypeTag = $userTypeTag;
+        self::$redis = $redis;
     }
 
     /**
@@ -35,7 +37,7 @@ class Control implements ControlInterface
     {
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
-        return $this->send($box_no, $str, $isSync);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -293,16 +295,34 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    private static function send($box_no, $msg, $isSync = false)
+    private function send($box_no, $msg, $isSync = false, $msgId = '')
     {
         Gateway::$registerAddress = self::$registerAddress;
-        if (!Gateway::isUidOnline($box_no)) return false;
+//        if (!Gateway::isUidOnline($box_no)) return false;
 
         try {
+            var_dump($msg);
             Gateway::sendToUid($box_no, hex2bin($msg));
 
+            if ($isSync) {
+                //是否获取相应
+                $redis = self::$redis;
+                $response = false;
 
-
+                for ($i = 0; $i <= 30; $i++) {
+                    sleep(1);
+                    $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msgId);
+                    if ($data) {
+                        $response = $this->decodeData($data);
+                        break;
+                    }
+                    if (in_array($i, [5, 10, 15, 20])) {
+                        //重试一次
+                        Gateway::sendToUid($box_no, hex2bin($msg));
+                    }
+                }
+                return $response;
+            }
             return true;
         } catch (\Exception $exception) {
             throw new \Exception('服务连接失败');
@@ -310,43 +330,11 @@ class Control implements ControlInterface
     }
 
     /**
-     * 发送同步命令
-     * @param $box_no
-     * @param $msg
-     * @return bool
-     * Author: Mead
-     */
-    private function sendSync($box_no, $msg, $msg_id)
-    {
-        Gateway::$registerAddress = self::$registerAddress;
-        if (!Gateway::isUidOnline($box_no)) return false;
-        Gateway::sendToUid($box_no, hex2bin($msg));
-
-        $redis = \Redis::connection();
-        $response = false;
-
-        for ($i = 0; $i <= 30; $i++) {
-            sleep(1);
-            $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msg_id);
-
-            if ($data) {
-                $response = $this->decodeData($data);
-                break;
-            }
-            if (in_array($i, [3, 5, 10, 15, 20])) {
-                //重试一次
-                Gateway::sendToUid($box_no, hex2bin($msg));
-            }
-        }
-        return $response;
-    }
-
-    /**
      * 解析车辆返回数据
      * @param $data
      * @return mixed
      */
-    public function decodeData($data, $decode = true)
+    private function decodeData($data, $decode = true)
     {
         return json_decode($data, true);
     }
@@ -378,7 +366,7 @@ class Control implements ControlInterface
      * @return string
      * User: Mead
      */
-    public function makeSendMsg($controller_cmd, $msgID, $cmd = CmdMap::CMD_REMOTE_CONTROL, $is_hex = true)
+    private function makeSendMsg($controller_cmd, $msgID, $cmd = CmdMap::CMD_REMOTE_CONTROL, $is_hex = true)
     {
         if (!$is_hex) {
             $controller_cmd = bin2hex((implode(';', $controller_cmd) . ';FUJIA'));
@@ -457,7 +445,7 @@ class Control implements ControlInterface
      * @param $type
      * User: Mead
      */
-    public function delRedisCache($box_no, $types)
+    private function delRedisCache($box_no, $types)
     {
         $cacheNames = [];
         if (is_array($types)) {
@@ -468,7 +456,7 @@ class Control implements ControlInterface
             $cacheNames[] = "cache:min:{$types}:{$box_no}";
         }
         if (!count($cacheNames)) return false;
-        Redis::connection()->del($cacheNames);
+        self::$redis->del($cacheNames);
     }
 
     /**

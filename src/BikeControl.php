@@ -3,6 +3,7 @@
 namespace ZhMead\XmnkBikeControl;
 
 use ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
+use ZhMead\XmnkBikeControl\Common\Maps\UserTypeMap;
 
 /**
  * Class EasySms.
@@ -16,6 +17,7 @@ class BikeControl
     protected $control;
     protected $controlKeys = [];
     protected $defaultGateway;
+    protected $redis = false;
 
     /**
      * Constructor.
@@ -37,16 +39,34 @@ class BikeControl
     {
         $gateways = $configs['registerGateways'];
 
+        try {
+            $this->redis = new \Redis();
+            $this->redis->connect($configs['redis']['host'], $configs['redis']['port']);
+            if (!empty($configs['redis']['password'])) {
+                $this->redis->auth($configs['redis']['password']);
+            }
+            $this->redis->select($configs['redis']['database']);
+        } catch (\Exception $exception) {
+            throw new \Exception('Redis链接失败');
+        }
+
+        //是否同步获取结果
+        $isSyncCmd = false;
+        if (array_key_exists('isSyncCmd', $configs)) $isSyncCmd = $configs['isSyncCmd'];
+
+        $userTypeTag = UserTypeMap::USER;
+        if (array_key_exists('userTypeTag', $configs)) $isSyncCmd = $configs['userTypeTag'];
+
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
-            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress']);
+            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
             $this->controlKeys[] = DeviceMap::TBit;
         }
         if (array_key_exists(DeviceMap::XiaoAn, $gateways)) {
-            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress']);
+            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
             $this->controlKeys[] = DeviceMap::XiaoAn;
         }
         if (array_key_exists(DeviceMap::WeiKeMu, $gateways)) {
-            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress']);
+            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
             $this->controlKeys[] = DeviceMap::WeiKeMu;
         }
 
@@ -56,6 +76,7 @@ class BikeControl
 
         if (!array_key_exists('defaultGateway', $configs)) $configs['defaultGateway'] = $this->controlKeys[0];
         $this->defaultGateway = $configs['defaultGateway'];
+
         return $this;
     }
 
