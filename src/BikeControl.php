@@ -37,8 +37,7 @@ class BikeControl
      */
     public function init(array $configs)
     {
-        $gateways = $configs['registerGateways'];
-
+        //连接redis
         try {
             $this->redis = new \Redis();
             $this->redis->connect($configs['redis']['host'], $configs['redis']['port']);
@@ -55,8 +54,10 @@ class BikeControl
         if (array_key_exists('isSyncCmd', $configs)) $isSyncCmd = $configs['isSyncCmd'];
 
         $userTypeTag = UserTypeMap::USER;
-        if (array_key_exists('userTypeTag', $configs)) $isSyncCmd = $configs['userTypeTag'];
+        if (array_key_exists('userTypeTag', $configs)) $userTypeTag = $configs['userTypeTag'];
 
+        if(!array_key_exists('registerGateways',$configs)) throw new  \Exception('registerGateways找不到该配置项');
+        $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
             $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag);
             $this->controlKeys[] = DeviceMap::TBit;

@@ -33,7 +33,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function bell($box_no, $isSync = false)
+    public function bell($box_no, $isSync = -1)
     {
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
@@ -46,7 +46,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function openLock($box_no, $sync = false)
+    public function openLock($box_no, $sync = -1)
     {
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
@@ -295,10 +295,17 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    private function send($box_no, $msg, $isSync = false, $msgId = '')
+    private function send($box_no, $msg, $isSync = -1, $msgId = '')
     {
         Gateway::$registerAddress = self::$registerAddress;
 //        if (!Gateway::isUidOnline($box_no)) return false;
+
+        if ($isSync === -1) {
+            $isSync = self::$isSync;
+            var_dump($isSync);
+        } else {
+            $isSync = (bool)$isSync;
+        }
 
         try {
             var_dump($msg);
@@ -311,6 +318,7 @@ class Control implements ControlInterface
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
+                    var_dump($i);
                     $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msgId);
                     if ($data) {
                         $response = $this->decodeData($data);
