@@ -201,7 +201,7 @@ class Control implements ControlInterface
     {
         $cmd = CmdMap::COMMAND_OBTAIN_CONTROLLER_DATA;
         $param = [];
-        return $this->send($box_no, $cmd, $param, $isSync);
+        return $this->send($box_no, $cmd, $param, true);
     }
 
     /**
