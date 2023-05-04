@@ -12,7 +12,8 @@ $config = [
             'registerAddress' => '127.0.0.1:12238'
         ],
         'xiaoan' => [
-            'registerAddress' => '127.0.0.1:12238'
+//            'registerAddress' => '127.0.0.1:12238'
+            'registerAddress' => '118.195.172.112:12238'
         ],
 //        'weikemu' => [
 //            'registerAddress' => '127.0.0.1:12238'
@@ -32,5 +33,5 @@ $config = [
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);
 //$bikeControl->device(DeviceMap::XiaoAn)->openLock('123456');
-$bikeControl->device(DeviceMap::XiaoAn)->bell('123456');
+$bikeControl->device(DeviceMap::XiaoAn)->bell('861037059456905');
 //$bikeControl->device(DeviceMap::XiaoAn)->openLock('123456');

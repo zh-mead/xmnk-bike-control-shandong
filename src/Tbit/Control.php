@@ -194,7 +194,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBoxSetting($box_no, $sync = -1)
+    public function selectBoxSetting($box_no, $setting = [], $sync = -1)
     {
         $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
 //        $select = ['SOFTVERSION', 'TID', 'BLEKG', 'LOGIN', 'DFTBLEENCKEY', 'DFTBLEENCKEY', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
@@ -282,7 +282,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function setBoxSetting($box_no, $sync = -1)
+    public function setBoxSetting($box_no, $setting = [], $sync = -1)
     {
         $select = ['PULSE=120', 'FREQ=15', 'VIBFILTERREMINDT=20', 'DFTBLEBONDKEY=NULL', 'BLEKG=1'];
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CMD_REMOTE_CONFIG);
@@ -300,7 +300,7 @@ class Control implements ControlInterface
     private function send($box_no, $msg, $isSync = -1, $msgId = '')
     {
         Gateway::$registerAddress = self::$registerAddress;
-//        if (!Gateway::isUidOnline($box_no)) return false;
+        if (!Gateway::isUidOnline($box_no)) return false;
 
         if ($isSync === -1) {
             $isSync = self::$isSync;
