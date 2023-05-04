@@ -33,5 +33,5 @@ $config = [
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);
 //$bikeControl->device(DeviceMap::XiaoAn)->openLock('123456');
-$bikeControl->device(DeviceMap::XiaoAn)->bell('861037059456905');
+$bikeControl->device(DeviceMap::XiaoAn)->bell('861037059456905', true);
 //$bikeControl->device(DeviceMap::XiaoAn)->openLock('123456');
