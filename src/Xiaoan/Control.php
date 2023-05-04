@@ -361,7 +361,8 @@ class Control implements ControlInterface
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
-                    if (self::$isDev) var_dump($i);
+                    if (self::$isDev) var_dump($i . "==>cmd:{$box_no}:{$msg_id}");
+
                     $data = $redis->get(BaseMap::CACHE_KEY . "cmd:{$box_no}:{$msg_id}");
                     if ($data) {
                         $response = $this->decodeData($data);
