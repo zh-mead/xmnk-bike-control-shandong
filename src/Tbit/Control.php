@@ -20,7 +20,7 @@ class Control implements ControlInterface
     protected static $redis = false;
     protected static $isDev = false;
 
-    public function __construct($registerAddress, $redis, $isSync = false, $userTypeTag = 'C', $isDev = false)
+    public function __construct($registerAddress, $redis, $isSync = false, $userTypeTag = 'C', $otherConfig = [], $isDev = false)
     {
         self::$registerAddress = $registerAddress;
         self::$isSync = $isSync;

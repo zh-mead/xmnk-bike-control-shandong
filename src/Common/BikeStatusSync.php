@@ -226,7 +226,13 @@ class BikeStatusSync
                 'time' => $location['time']
             ];
         } catch (\Exception $exception) {
-            return false;
+            return [
+                'lat' => 0,
+                'lng' => 0,
+                'mileage' => 0,
+                'spike' => 0,
+                'time' => 0
+            ];
         }
     }
 

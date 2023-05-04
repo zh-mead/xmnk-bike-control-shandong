@@ -17,18 +17,20 @@ class Control implements ControlInterface
 
     private static $registerAddress = '';
     protected static $isSync = false;
-    protected static $userTypeTag = 'C';
+    protected static $userRoleTag = 'user';
     protected static $redis = false;
     protected static $bikeStatusSync = false;
     protected static $isDev = false;
+    protected static $isAutoBikeStatusSync = false;
 
-    public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userTypeTag = 'C', $isDev = false)
+    public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
         self::$registerAddress = $registerAddress;
         self::$isSync = $isSync;
-        self::$userTypeTag = $userTypeTag;
+        self::$userRoleTag = $userRoleTag;
         self::$bikeStatusSync = $bikeStatusSync;
         self::$isDev = $isDev;
+        self::$isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
     }
 
     /**
@@ -56,7 +58,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no);
 
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
@@ -74,7 +76,10 @@ class Control implements ControlInterface
      */
     public function closeLock($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeWaitRideStatus($box_no);
+        if (self::$isAutoBikeStatusSync) {
+            $location = self::$bikeStatusSync->byBikeNoGetLocation($box_no);
+            self::$bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
+        }
 
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
@@ -91,6 +96,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
@@ -107,6 +113,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
