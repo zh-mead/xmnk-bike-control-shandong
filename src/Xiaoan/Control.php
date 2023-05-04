@@ -265,6 +265,7 @@ class Control implements ControlInterface
     public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_OBTAIN_CONTROLLER_DATA;
+        $cmd = CmdMap::COMMAND_QUERY_INTERNAL_PARAMETERS;
         $param = [];
         return $this->send($box_no, $cmd, $param, true);
     }
