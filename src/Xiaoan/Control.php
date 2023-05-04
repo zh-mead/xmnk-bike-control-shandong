@@ -4,7 +4,7 @@ namespace ZhMead\XmnkBikeControl\Xiaoan;
 
 use GatewayClient\Gateway;
 use ZhMead\XmnkBikeControl\Common\ControlInterface;
-use ZhMead\XmnkBikeControl\Common\Maps\BaseMap;
+use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 use ZhMead\XmnkBikeControl\Xiaoan\Maps\CmdMap;
 use ZhMead\XmnkBikeControl\Xiaoan\Maps\VideoMap;
 
@@ -56,6 +56,8 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $isSync = -1)
     {
+        self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no);
+
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -72,6 +74,8 @@ class Control implements ControlInterface
      */
     public function closeLock($box_no, $isSync = -1)
     {
+        self::$bikeStatusSync->toBikeWaitRideStatus($box_no);
+
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
