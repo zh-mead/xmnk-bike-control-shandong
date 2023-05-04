@@ -74,7 +74,6 @@ class Control implements ControlInterface
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
-            'force' => 1
         ];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
