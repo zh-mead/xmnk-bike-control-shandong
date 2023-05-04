@@ -34,11 +34,11 @@ $config = [
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);
 //$a = $bikeControl->device(DeviceMap::XiaoAn)->bell('861037059456905', true);
-//$a = $bikeControl->device(DeviceMap::XiaoAn)->selectBoxSetting('861037059456905');
+$a = $bikeControl->device(DeviceMap::XiaoAn)->selectBoxSetting('861037059456905');
 //$a = $bikeControl->device(DeviceMap::XiaoAn)->selectBoxServerUrl('861037059456905');
 //$a = $bikeControl->device(DeviceMap::XiaoAn)->nowBikeLocation('861037059456905');
 //$a = $bikeControl->device(DeviceMap::XiaoAn)->openLock('861037059456905');
-$a = $bikeControl->device(DeviceMap::XiaoAn)->closeLock('861037059456905');
+//$a = $bikeControl->device(DeviceMap::XiaoAn)->closeLock('861037059456905');
 //$a = $bikeControl->device(DeviceMap::XiaoAn)->nowBikeBatteryMSG('861037059456905', 0, true);
 var_dump($a);
 //$bikeControl->device(DeviceMap::XiaoAn)->openLock('123456');
