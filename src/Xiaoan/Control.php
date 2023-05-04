@@ -218,6 +218,23 @@ class Control implements ControlInterface
     }
 
     /**
+     * 配置服务器的地址
+     * @param $box_no
+     * @param $setting
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function setBoxServerUrl($box_no, $server = '', $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_MODIFY_SERVER_ADDRESS;
+        $param = [
+            'server' => $server
+        ];
+        return $this->send($box_no, $cmd, $param, true);
+    }
+
+    /**
      * 查询车的状态
      * @param $box_no
      * @return
