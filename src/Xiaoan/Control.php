@@ -205,6 +205,19 @@ class Control implements ControlInterface
     }
 
     /**
+     * 查询车的服务器的地址
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function selectBoxServerUrl($box_no, $setting = [], $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_QUERY_SERVER_ADDRESS;
+        $param = [];
+        return $this->send($box_no, $cmd, $param, true);
+    }
+
+    /**
      * 查询车的状态
      * @param $box_no
      * @return
