@@ -197,7 +197,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function downBoxSetting($box_no, $setting = [], $isSync = -1)
+    public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
     {
         return false;
     }
