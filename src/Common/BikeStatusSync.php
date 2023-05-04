@@ -126,6 +126,32 @@ class BikeStatusSync
     }
 
     /**
+     * 对超出运营范围的车辆加电
+     * @param $box_no
+     * Author: Mead
+     */
+    public function toBikeGetElectric($box_no)
+    {
+        $data = $this->getRideBikeOrderInfo($box_no);
+        $data['is_out_area_lost_electric'] = 0;
+        self::$redis->set(self::REDIS_RIDE_BIKE_ORDERS_TAG . $box_no, serialize($data));
+        return true;
+    }
+
+    /**
+     * 对低电量车不限制电量
+     * @param $box_no
+     * Author: Mead
+     */
+    public function toBikeNoElectric($box_no)
+    {
+        $data = $this->getRideBikeOrderInfo($box_no);
+        $data['is_low_electric_close_bike'] = 0;
+        self::$redis->set(self::REDIS_RIDE_BIKE_ORDERS_TAG . $box_no, serialize($data));
+        return true;
+    }
+
+    /**
      * 车辆上线
      * @param $box_no
      * @param int $lat

@@ -203,6 +203,60 @@ class Control implements ControlInterface
     }
 
     /**
+     * 关闭超区失去电能
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function closeOutAreaLoseElectric($box_no, $isSync = -1)
+    {
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
+        $param = [
+            'acc' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 关闭对车辆低电骑行限制
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function closeNoElectricLimit($box_no, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
+        return true;
+    }
+
+    /**
+     * 车辆上线
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function bikeOnLine($box_no, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeOnLineStatus(UserRoleMap::USER, $box_no);
+        return true;
+    }
+
+    /**
+     * 车辆上线
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function bikeOffLine($box_no, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeOffLineStatus(UserRoleMap::USER, $box_no);
+        return true;
+    }
+
+
+    /**
      * 查询车的配置
      * @param $box_no
      * @return bool
