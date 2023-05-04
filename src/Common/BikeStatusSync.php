@@ -33,6 +33,16 @@ class BikeStatusSync
     }
 
     /**
+     * 删除key
+     * @param $key
+     * @return mixed
+     */
+    public function delKey($key)
+    {
+        return self::$redis->del($key);
+    }
+
+    /**
      * 车辆处于骑行状态 (用户订单时（data: 订单id[id],区域id[area_id],车辆id[bike_id]）)
      * @param $bike_no
      * @param array $data
