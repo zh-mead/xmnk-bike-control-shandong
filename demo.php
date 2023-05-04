@@ -13,7 +13,7 @@ $config = [
         ],
         'xiaoan' => [
 //            'registerAddress' => '127.0.0.1:12238'
-            'registerAddress' => '118.195.172.112:12238'
+            'registerAddress' => '10.206.0.8:12238'
         ],
 //        'weikemu' => [
 //            'registerAddress' => '127.0.0.1:12238'
@@ -21,10 +21,10 @@ $config = [
     ],
     'defaultGateway' => DeviceMap::TBit,
     'redis' => [
-        'host' => '127.0.0.1',
-        'port' => '6379',
-        'password' => '',
-        'database' => 0,
+        'host' => 'node3',
+        'port' => 6379,
+        'password' => 'lV3oNUXv',
+        'database' => 10
     ],
     'isSyncCmd' => false,
     'userTypeTag' => UserTypeMap::USER,
