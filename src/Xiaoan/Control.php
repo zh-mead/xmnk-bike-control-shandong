@@ -282,6 +282,7 @@ class Control implements ControlInterface
     public function nowBikeBatteryMSG($box_no, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        $cmd = CmdMap::COMMAND_OBTAIN_BMS_REALTIME_DATA;
         $param = [];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
