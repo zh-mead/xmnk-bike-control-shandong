@@ -11,8 +11,8 @@ use ZhMead\XmnkBikeControl\Xiaoan\Maps\VideoMap;
 class Control implements ControlInterface
 {
     //分割符
-    const SPLIT_TAG = 'aa55';
-    const START_TAG = 'AA AA';
+    const SPLIT_TAG = '';
+    const START_TAG = 'aa55';
     const CMD_WILD = '00';
 
     private static $registerAddress = '';
@@ -106,21 +106,6 @@ class Control implements ControlInterface
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
-        ];
-        return $this->send($box_no, $cmd, $param, $isSync);
-    }
-
-    /**
-     * 寻车响铃
-     * @param $box_no
-     * @return bool
-     * User: Mead
-     */
-    public function bellBike($box_no, $isSync = -1)
-    {
-        $cmd = CmdMap::COMMAND_CONTROL_VOICE_BROADCAST;
-        $param = [
-            'idx' => VoiceMap::WOZAIZHELI
         ];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
@@ -227,9 +212,8 @@ class Control implements ControlInterface
     public function selectBikeStatus($box_no, $setting = [], $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
-        $num_code = self::getRandHex();
-        $key = "cmd:{$box_no}:{$num_code}";
-        return self::sendSync($box_no, self::encode($cmd, [], $num_code), $key);
+        $param = [];
+        return self::send($box_no, $cmd, $param, $isSync);
     }
 
     /**
@@ -252,19 +236,6 @@ class Control implements ControlInterface
      * User: Mead
      */
     public function nowBikeLocation($box_no, $isSync = -1)
-    {
-        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
-        $param = [];
-        return $this->send($box_no, $cmd, $param, $isSync);
-    }
-
-    /**
-     * 融合定位包[蓝牙道钉]
-     * @param $box_no
-     * @return bool
-     * Author: Mead
-     */
-    public function nowBikeUpLocation($box_no, $sync = false, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
         $param = [];
@@ -301,19 +272,19 @@ class Control implements ControlInterface
 
         if (array_key_exists('server', $setting)) {
             $p['server'] = $setting['server'];
-            self::send($box_no, self::encode(CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p));
+            self::send($box_no, CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p);
         }
 
         if (array_key_exists('maxecuspeed', $setting)) {
             $index = 7;
             $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
-            self::send($box_no, self::encode(CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2));
+            self::send($box_no, CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2);
         }
 
         if (count($param)) {
-            return self::send($box_no, self::encode($cmd, $param));
+            return self::send($box_no, $cmd, $param);
         }
-        return false;
+        return true;
     }
 
     /**
@@ -344,28 +315,6 @@ class Control implements ControlInterface
             'defend' => 1
         ];
         return $this->send($box_no, $cmd, $param, $isSync);
-    }
-
-    /**
-     * 播放超区语音
-     * @param $box_no
-     * @return bool
-     * Author: Mead
-     */
-    public function outAreaAutoPlayVideo($box_no, $isSync = -1)
-    {
-        return $this->playVideo($box_no, VideoMap::NEAR_SERVICE_AREA_SOUND, $isSync);
-    }
-
-    /**
-     * 进区关闭播放超区语音
-     * @param $box_no
-     * @return bool
-     * Author: Mead
-     */
-    public function inAreaAutoCloseVideo($box_no, $isSync = -1)
-    {
-        return false;
     }
 
     /**
@@ -454,7 +403,7 @@ class Control implements ControlInterface
         }
 
         $msg = [
-            self::SPLIT_TAG,
+            self::START_TAG,
             self::CMD_WILD,
             $randHex,
             $bodyNumsHex,
