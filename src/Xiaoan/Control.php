@@ -515,6 +515,7 @@ class Control implements ControlInterface
             $cacheNames[] = "cache:min:{$types}:{$box_no}";
         }
         if (!count($cacheNames)) return false;
-        self::$redis->del($cacheNames);
+//        self::$redis->del($cacheNames);
+        self::$bikeStatusSync->delKeys($cacheNames);
     }
 }
