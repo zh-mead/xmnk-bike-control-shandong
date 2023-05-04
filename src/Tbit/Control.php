@@ -269,7 +269,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function nowBikeBatteryMSG($box_no, $sync = -1)
+    public function nowBikeBatteryMSG($box_no, $isSoc = false, $sync = -1)
     {
         $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_GET_BATTERY_INFO);
         $str = $this->makeSendMsg(CmdMap::CONTROL_GET_BATTERY_INFO, $msg_id);
