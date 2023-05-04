@@ -5,6 +5,7 @@ namespace ZhMead\XmnkBikeControl\Tbit;
 use GatewayClient\Gateway;
 use ZhMead\XmnkBikeControl\Common\ControlInterface;
 use ZhMead\XmnkBikeControl\Common\Maps\BaseMap;
+use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 use ZhMead\XmnkBikeControl\Tbit\Maps\CmdMap;
 use ZhMead\XmnkBikeControl\Tbit\Maps\VideoMap;
 
@@ -16,17 +17,19 @@ class Control implements ControlInterface
 
     private static $registerAddress = '';
     protected static $isSync = false;
-    protected static $userTypeTag = 'C';
+    protected static $userRoleTag = 'user';
     protected static $redis = false;
     protected static $isDev = false;
+    protected static $isAutoBikeStatusSync = false;
 
-    public function __construct($registerAddress, $redis, $isSync = false, $userTypeTag = 'C', $otherConfig = [], $isDev = false)
+    public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
         self::$registerAddress = $registerAddress;
         self::$isSync = $isSync;
-        self::$userTypeTag = $userTypeTag;
-        self::$redis = $redis;
+        self::$userRoleTag = $userRoleTag;
+        self::$bikeStatusSync = $bikeStatusSync;
         self::$isDev = $isDev;
+        self::$isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
     }
 
     /**
@@ -37,7 +40,7 @@ class Control implements ControlInterface
      */
     public function bell($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -48,12 +51,13 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function openLock($box_no, $sync = -1)
+    public function openLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_UNLOCK);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no);
+
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
-        $this->send($box_no, $str);
-        return true;
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -62,12 +66,15 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function closeLock($box_no, $sync = -1)
+    public function closeLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
+        if (self::$isAutoBikeStatusSync) {
+            $location = self::$bikeStatusSync->byBikeNoGetLocation($box_no);
+            self::$bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
+        }
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_LOCK, $msg_id);
-        $this->send($box_no, $str);
-        return true;
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -76,12 +83,12 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function temporaryCloseLock($box_no, $sync = -1)
+    public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
-        $this->send($box_no, $str);
-        return true;
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -90,25 +97,12 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function temporaryOpnLock($box_no, $sync = -1)
+    public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
-        $this->send($box_no, $str);
-        return true;
-    }
-
-    /**
-     * 寻车响铃
-     * @param $box_no
-     * @return bool
-     * User: Mead
-     */
-    public function bellBike($box_no, $sync = -1)
-    {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
-        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -117,11 +111,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function openBatteryLock($box_no, $sync = -1)
+    public function openBatteryLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -130,11 +124,9 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function closeBatteryLock($box_no, $sync = -1)
+    public function closeBatteryLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK);
-        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_BATTERY_LOCK, $msg_id);
-        return $this->send($box_no, $str);
+        return false;
     }
 
     /**
@@ -143,9 +135,9 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function outAreaPlayVideo($box_no, $sync = -1)
+    public function outAreaPlayVideo($box_no, $isSync = -1)
     {
-        return $this->playVideo($box_no, VideoMap::VIDEO_OUT_AREA);
+        return $this->playVideo($box_no, VideoMap::VIDEO_OUT_AREA, $isSync);
     }
 
     /**
@@ -155,11 +147,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function playVideo($box_no, $video_cmd, $sync = -1)
+    public function playVideo($box_no, $video_cmd, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, $video_cmd);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, $video_cmd);
         $str = $this->makeSendMsg($video_cmd, $msg_id, CmdMap::CMD_REMOTE_VOICE);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -168,11 +160,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function outAreaLoseElectric($box_no, $sync = -1)
+    public function outAreaLoseElectric($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
         $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -181,11 +173,60 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function outAreaGetElectric($box_no, $sync = -1)
+    public function outAreaGetElectric($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
         $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
+    }
+
+    /**
+     * 关闭超区失去电能
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function closeOutAreaLoseElectric($box_no, $isSync = -1)
+    {
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        return $this->outAreaGetElectric($box_no, $isSync);
+    }
+
+    /**
+     * 关闭对车辆低电骑行限制
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function closeLowElectricLimit($box_no, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
+        return true;
+    }
+
+    /**
+     * 车辆上线
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function bikeOnLine($box_no, $lat = 0, $lng = 0, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
+        return true;
+    }
+
+    /**
+     * 车辆上线
+     * @param $box_no
+     * @param $isSync
+     * @return bool
+     */
+    public function bikeOffLine($box_no, $isSync = -1)
+    {
+        self::$bikeStatusSync->toBikeOffLineStatus($box_no);
+        return true;
     }
 
     /**
@@ -194,13 +235,12 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBoxSetting($box_no, $setting = [], $sync = -1)
+    public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
     {
-        $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
-//        $select = ['SOFTVERSION', 'TID', 'BLEKG', 'LOGIN', 'DFTBLEENCKEY', 'DFTBLEENCKEY', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CMD_REMOTE_SELECT);
+        if (!count($setting)) $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_SELECT);
         $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -209,12 +249,12 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBikeStatus($box_no, $sync = -1)
+    public function selectBikeStatus($box_no, $isSync = -1)
     {
         $select = ['DEVICESTATUS', 'PHASESTATUS'];
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CMD_REMOTE_SELECT);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_SELECT);
         $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -223,11 +263,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function rebootBox($box_no, $sync = -1)
+    public function rebootBox($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -236,32 +276,28 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function nowBikeLocation($box_no, $sync = -1)
+    public function nowBikeLocation($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_REMOTE_LOCATION);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_LOCATION);
         //删除ridis位置缓存
         $this->delRedisCache($box_no, 'update_bike_location');
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_LOCATION, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
-    /**
-     * 融合定位包
-     * @param $box_no
-     * @return bool
-     * Author: Mead
-     */
-    public function nowBikeUpLocation($box_no, $sync = false)
-    {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_NOW_UP_LOCATION);
-        //删除ridis位置缓存
-        $str = $this->makeSendMsg(CmdMap::CONTROL_NOW_UP_LOCATION, $msg_id);
-        if ($sync) {
-            return $this->sendSync($box_no, $str, "CONTROL_NOW_UP_LOCATION:{$box_no}");
-        } else {
-            return $this->send($box_no, $str);
-        }
-    }
+//    /**
+//     * 融合定位包
+//     * @param $box_no
+//     * @return bool
+//     * Author: Mead
+//     */
+//    public function nowBikeUpLocation($box_no, $isSync = false)
+//    {
+//        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_NOW_UP_LOCATION);
+//        //删除ridis位置缓存
+//        $str = $this->makeSendMsg(CmdMap::CONTROL_NOW_UP_LOCATION, $msg_id);
+//        return $this->send($box_no, $str, $isSync, $msg_id);
+//    }
 
     /**
      * 立即上传电池信息
@@ -269,11 +305,11 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function nowBikeBatteryMSG($box_no, $isSoc = false, $sync = -1)
+    public function nowBikeBatteryMSG($box_no, $isSoc = false, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CONTROL_GET_BATTERY_INFO);
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_GET_BATTERY_INFO);
         $str = $this->makeSendMsg(CmdMap::CONTROL_GET_BATTERY_INFO, $msg_id);
-        return $this->send($box_no, $str);
+        return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
     /**
@@ -282,12 +318,49 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function setBoxSetting($box_no, $setting = [], $sync = -1)
+    public function setBoxSetting($box_no, $setting = [], $isSync = -1)
     {
-        $select = ['PULSE=120', 'FREQ=15', 'VIBFILTERREMINDT=20', 'DFTBLEBONDKEY=NULL', 'BLEKG=1'];
-        $msg_id = $this->makeMsgId($box_no, self::$userTypeTag, CmdMap::CMD_REMOTE_CONFIG);
-        $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_CONFIG, false);
-        return $this->send($box_no, $str);
+//        $select = ['PULSE=120', 'FREQ=15', 'VIBFILTERREMINDT=20', 'DFTBLEBONDKEY=NULL', 'BLEKG=1'];
+        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_CONFIG);
+        $str = $this->makeSendMsg($setting, $msg_id, CmdMap::CMD_REMOTE_CONFIG, false);
+        return $this->send($box_no, $str, $isSync, $msg_id);
+    }
+
+    /**
+     * 查询车的服务器的地址
+     * @param $box_no
+     * @return bool
+     * User: Mead
+     */
+    public function selectBoxServerUrl($box_no)
+    {
+        return $this->selectBoxSetting($box_no, ['DOMAIN'], true);
+    }
+
+    /**
+     * 配置服务器的地址
+     * @param $box_no
+     * @param $setting
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function setBoxServerUrl($box_no, $server = '', $isSync = -1)
+    {
+        return $this->setBoxSetting($box_no, ['server' => $server], true);
+    }
+
+    /**
+     * 配置车辆速度
+     * @param $box_no
+     * @param $setting
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function setBikeSpeedLimit($box_no, $speed = 7, $isSync = -1)
+    {
+        return $this->setBoxSetting($box_no, ['maxecuspeed' => $speed], true);
     }
 
     /**
