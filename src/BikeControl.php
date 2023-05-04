@@ -2,6 +2,7 @@
 
 namespace ZhMead\XmnkBikeControl;
 
+use ZhMead\XmnkBikeControl\Common\BikeStatusSync;
 use ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
 use ZhMead\XmnkBikeControl\Common\Maps\UserTypeMap;
 
@@ -60,17 +61,20 @@ class BikeControl
         if (array_key_exists('isDev', $configs)) $isDev = $configs['isDev'];
 
         if (!array_key_exists('registerGateways', $configs)) throw new  \Exception('registerGateways找不到该配置项');
+
+        $bikeStatusSync = new BikeStatusSync($this->redis);
+
         $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
-            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
+            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::TBit;
         }
         if (array_key_exists(DeviceMap::XiaoAn, $gateways)) {
-            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
+            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::XiaoAn;
         }
         if (array_key_exists(DeviceMap::WeiKeMu, $gateways)) {
-            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $this->redis, $isSyncCmd, $userTypeTag, $isDev);
+            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userTypeTag, $isDev);
             $this->controlKeys[] = DeviceMap::WeiKeMu;
         }
 

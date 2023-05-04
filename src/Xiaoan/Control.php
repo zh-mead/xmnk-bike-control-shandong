@@ -19,14 +19,15 @@ class Control implements ControlInterface
     protected static $isSync = false;
     protected static $userTypeTag = 'C';
     protected static $redis = false;
+    protected static $bikeStatusSync = false;
     protected static $isDev = false;
 
-    public function __construct($registerAddress, $redis, $isSync = false, $userTypeTag = 'C', $isDev = false)
+    public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userTypeTag = 'C', $isDev = false)
     {
         self::$registerAddress = $registerAddress;
         self::$isSync = $isSync;
         self::$userTypeTag = $userTypeTag;
-        self::$redis = $redis;
+        self::$bikeStatusSync = $bikeStatusSync;
         self::$isDev = $isDev;
     }
 
@@ -391,14 +392,15 @@ class Control implements ControlInterface
             Gateway::sendToUid($box_no, hex2bin($msg));
             if ($isSync) {
                 //是否获取相应
-                $redis = self::$redis;
+//                $redis = self::$redis;
                 $response = false;
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
                     if (self::$isDev) var_dump($i . "==>cmd:{$box_no}:{$msg_id}");
 
-                    $data = $redis->get(BaseMap::CACHE_KEY . ":cmd:{$box_no}:{$msg_id}");
+//                    $data = $redis->get(BaseMap::CACHE_KEY . ":cmd:{$box_no}:{$msg_id}");
+                    $data = self::$bikeStatusSync->getBikeBoxInfo(":cmd:{$box_no}:{$msg_id}");
                     if ($data) {
                         $response = $this->decodeData($data);
                         break;
