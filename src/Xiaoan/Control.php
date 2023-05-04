@@ -225,7 +225,7 @@ class Control implements ControlInterface
      * @param $isSync
      * @return bool
      */
-    public function closeNoElectricLimit($box_no, $isSync = -1)
+    public function closeLowElectricLimit($box_no, $isSync = -1)
     {
         self::$bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
         return true;
@@ -237,9 +237,9 @@ class Control implements ControlInterface
      * @param $isSync
      * @return bool
      */
-    public function bikeOnLine($box_no, $isSync = -1)
+    public function bikeOnLine($box_no, $lat = 0, $lng = 0, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOnLineStatus(UserRoleMap::USER, $box_no);
+        self::$bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
         return true;
     }
 
@@ -251,7 +251,7 @@ class Control implements ControlInterface
      */
     public function bikeOffLine($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOffLineStatus(UserRoleMap::USER, $box_no);
+        self::$bikeStatusSync->toBikeOffLineStatus($box_no);
         return true;
     }
 
@@ -262,9 +262,9 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
+    public function selectBoxSetting($box_no, $setting = [])
     {
-        $cmd = CmdMap::COMMAND_OBTAIN_CONTROLLER_DATA;
+//        $cmd = CmdMap::COMMAND_OBTAIN_CONTROLLER_DATA;
         $cmd = CmdMap::COMMAND_QUERY_INTERNAL_PARAMETERS;
         $param = [];
         return $this->send($box_no, $cmd, $param, true);
@@ -276,7 +276,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function selectBoxServerUrl($box_no, $setting = [], $isSync = -1)
+    public function selectBoxServerUrl($box_no)
     {
         $cmd = CmdMap::COMMAND_QUERY_SERVER_ADDRESS;
         $param = [];
@@ -296,6 +296,23 @@ class Control implements ControlInterface
         $cmd = CmdMap::COMMAND_MODIFY_SERVER_ADDRESS;
         $param = [
             'server' => $server
+        ];
+        return $this->send($box_no, $cmd, $param, true);
+    }
+
+    /**
+     * 配置车辆速度
+     * @param $box_no
+     * @param $setting
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function setBikeSpeedLimit($box_no, $speed = '100', $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT;
+        $param = [
+            'speed' => $speed
         ];
         return $this->send($box_no, $cmd, $param, true);
     }
@@ -352,7 +369,6 @@ class Control implements ControlInterface
         if ($isSoc) {
             $cmd = CmdMap::COMMAND_OBTAIN_BMS_REALTIME_DATA;
         }
-//        $cmd = CmdMap::COMMAND_OBTAIN_BMS_FIXED_DATA;
         $param = [];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
@@ -363,9 +379,9 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function setBoxSetting($box_no, $setting = [], $is_result = false, $isSync = -1)
+    public function setBoxSetting($box_no, $setting = [], $isSync = -1)
     {
-        $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
+        $cmd = CmdMap::COMMAND_SET_INTERNAL_PARAMETERS;
 
         $param[] = [];
         if (array_key_exists('freq', $setting)) {
@@ -374,13 +390,15 @@ class Control implements ControlInterface
 
         if (array_key_exists('server', $setting)) {
             $p['server'] = $setting['server'];
-            self::send($box_no, CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p);
+//            self::send($box_no, CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p);
+            $this->setBoxServerUrl($box_no, $p['server']);
         }
 
         if (array_key_exists('maxecuspeed', $setting)) {
             $index = 7;
             $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
-            self::send($box_no, CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2);
+            $this->setBikeSpeedLimit($box_no, $p2['speed']);
+//            self::setBikeSpeedLimit($box_no, CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2);
         }
 
         if (count($param)) {
