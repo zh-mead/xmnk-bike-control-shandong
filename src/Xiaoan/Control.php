@@ -283,6 +283,7 @@ class Control implements ControlInterface
     {
         $cmd = CmdMap::COMMAND_QUERY_DEVICE_STATUS_INFO;
         $cmd = CmdMap::COMMAND_OBTAIN_BMS_REALTIME_DATA;
+        $cmd = CmdMap::COMMAND_OBTAIN_BMS_FIXED_DATA;
         $param = [];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
