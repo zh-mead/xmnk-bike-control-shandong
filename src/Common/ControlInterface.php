@@ -41,7 +41,7 @@ interface ControlInterface
 
     public function nowBikeLocation($box_no, $isSync);
 
-    public function nowBikeBatteryMSG($box_no, $isSync);
+    public function nowBikeBatteryMSG($box_no,$isSoc = 0, $isSync);
 
     public function setBoxSetting($box_no, $setting = [], $isSync);
 }
