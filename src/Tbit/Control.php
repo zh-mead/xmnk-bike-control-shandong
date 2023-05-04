@@ -18,7 +18,7 @@ class Control implements ControlInterface
     private static $registerAddress = '';
     protected static $isSync = false;
     protected static $userRoleTag = 'user';
-    protected static $redis = false;
+    protected static $bikeStatusSync = false;
     protected static $isDev = false;
     protected static $isAutoBikeStatusSync = false;
 
