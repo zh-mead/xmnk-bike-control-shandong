@@ -379,7 +379,7 @@ class Control implements ControlInterface
         $msg = self::encode($cmd, $param, $msg_id);
 
         Gateway::$registerAddress = self::$registerAddress;
-//        if (!Gateway::isUidOnline($box_no)) return false;
+        if (!Gateway::isUidOnline($box_no)) return false;
 
         if ($isSync === -1) {
             $isSync = self::$isSync;
