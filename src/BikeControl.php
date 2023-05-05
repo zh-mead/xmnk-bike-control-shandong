@@ -149,6 +149,17 @@ class BikeControl
         return $this;
     }
 
+    public function setControlProperty($property, $val)
+    {
+        if (!count($this->controlKeys)) throw new \Exception('必须配置一个中控');
+        if ($this->control) {
+            $this->control->{$property} = $val;
+            return $this;
+        }
+        $this->controls[$this->defaultGateway]->$property = $val;
+        return $this;
+    }
+
     /**
      * @return BikeStatusSync
      */
@@ -164,5 +175,14 @@ class BikeControl
             return $this->control->$method(...$parameters);
         }
         return $this->controls[$this->defaultGateway]->$method(...$parameters);
+    }
+
+    public function __get($property)
+    {
+        if (!count($this->controlKeys)) throw new \Exception('必须配置一个中控');
+        if ($this->control) {
+            return $this->control->$property;
+        }
+        return $this->controls[$this->defaultGateway]->$property;
     }
 }

@@ -15,21 +15,21 @@ class Control implements ControlInterface
     const SPLIT_TAG = 'bbbb';
     const START_TAG = 'AA AA';
 
-    private static $registerAddress = '';
-    protected static $isSync = false;
-    protected static $userRoleTag = 'user';
-    protected static $bikeStatusSync = false;
-    protected static $isDev = false;
-    protected static $isAutoBikeStatusSync = false;
+    private $registerAddress = '';
+    private $bikeStatusSync = false;
+    public $isSync = false;
+    public $userRoleTag = 'user';
+    public $isDev = false;
+    public $isAutoBikeStatusSync = false;
 
     public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
-        self::$registerAddress = $registerAddress;
-        self::$isSync = $isSync;
-        self::$userRoleTag = $userRoleTag;
-        self::$bikeStatusSync = $bikeStatusSync;
-        self::$isDev = $isDev;
-        self::$isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
+        $this->registerAddress = $registerAddress;
+        $this->isSync = $isSync;
+        $this->userRoleTag = $userRoleTag;
+        $this->bikeStatusSync = $bikeStatusSync;
+        $this->isDev = $isDev;
+        $this->isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
     }
 
     /**
@@ -40,7 +40,7 @@ class Control implements ControlInterface
      */
     public function bell($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_FIND_BIKE);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_FIND_BIKE, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -53,9 +53,9 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (is_array($cacheOtherData) && self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
+        if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
 
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -69,10 +69,10 @@ class Control implements ControlInterface
     public function closeLock($box_no, $isSync = -1)
     {
         if (self::$isAutoBikeStatusSync) {
-            $location = self::$bikeStatusSync->byBikeNoGetLocation($box_no);
-            self::$bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
+            $location = $this->bikeStatusSync->byBikeNoGetLocation($box_no);
+            $this->bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
         }
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -85,8 +85,8 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
+        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -99,8 +99,8 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
+        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -113,7 +113,7 @@ class Control implements ControlInterface
      */
     public function openBatteryLock($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BATTERY_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -149,7 +149,7 @@ class Control implements ControlInterface
      */
     public function playVideo($box_no, $video_cmd, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, $video_cmd);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, $video_cmd);
         $str = $this->makeSendMsg($video_cmd, $msg_id, CmdMap::CMD_REMOTE_VOICE);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -162,7 +162,7 @@ class Control implements ControlInterface
      */
     public function outAreaLoseElectric($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC);
         $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_LOST_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -175,7 +175,7 @@ class Control implements ControlInterface
      */
     public function outAreaGetElectric($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC);
         $str = $this->makeSendMsg(CmdMap::CONTROL_OUT_AREA_OPEN_ELECTRIC, $msg_id, CmdMap::CMD_REMOTE_CONTROL);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -189,7 +189,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
         return $this->outAreaGetElectric($box_no, $isSync);
     }
 
@@ -201,7 +201,7 @@ class Control implements ControlInterface
      */
     public function closeLowElectricLimit($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
+        $this->bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
         return true;
     }
 
@@ -213,7 +213,7 @@ class Control implements ControlInterface
      */
     public function bikeOnLine($box_no, $lat = 0, $lng = 0, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
+        $this->bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
         return true;
     }
 
@@ -225,7 +225,7 @@ class Control implements ControlInterface
      */
     public function bikeOffLine($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOffLineStatus($box_no);
+        $this->bikeStatusSync->toBikeOffLineStatus($box_no);
         return true;
     }
 
@@ -238,7 +238,7 @@ class Control implements ControlInterface
     public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
     {
         if (!count($setting)) $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_SELECT);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CMD_REMOTE_SELECT);
         $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -252,7 +252,7 @@ class Control implements ControlInterface
     public function selectBikeStatus($box_no, $isSync = -1)
     {
         $select = ['DEVICESTATUS', 'PHASESTATUS'];
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_SELECT);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CMD_REMOTE_SELECT);
         $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -265,7 +265,7 @@ class Control implements ControlInterface
      */
     public function rebootBox($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_REBOOT_SYSTEM, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -278,7 +278,7 @@ class Control implements ControlInterface
      */
     public function nowBikeLocation($box_no, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_LOCATION);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_LOCATION);
         //删除ridis位置缓存
         $this->delRedisCache($box_no, 'update_bike_location');
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_LOCATION, $msg_id);
@@ -292,7 +292,7 @@ class Control implements ControlInterface
      */
     public function getRideBikeOrderInfo($box_no)
     {
-        return self::$bikeStatusSync->getRideBikeOrderInfo($box_no);
+        return $this->bikeStatusSync->getRideBikeOrderInfo($box_no);
     }
 
     /**
@@ -302,7 +302,7 @@ class Control implements ControlInterface
      */
     public function byBoxNoGetLocation($box_no)
     {
-        return self::$bikeStatusSync->byBoxNoGetLocation($box_no);
+        return $this->bikeStatusSync->byBoxNoGetLocation($box_no);
     }
 
 //    /**
@@ -313,7 +313,7 @@ class Control implements ControlInterface
 //     */
 //    public function nowBikeUpLocation($box_no, $isSync = false)
 //    {
-//        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_NOW_UP_LOCATION);
+//        $msg_id = $this->makeMsgId($box_no,$this->userRoleTag, CmdMap::CONTROL_NOW_UP_LOCATION);
 //        //删除ridis位置缓存
 //        $str = $this->makeSendMsg(CmdMap::CONTROL_NOW_UP_LOCATION, $msg_id);
 //        return $this->send($box_no, $str, $isSync, $msg_id);
@@ -327,7 +327,7 @@ class Control implements ControlInterface
      */
     public function nowBikeBatteryMSG($box_no, $isSoc = false, $isSync = -1)
     {
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_GET_BATTERY_INFO);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_GET_BATTERY_INFO);
         $str = $this->makeSendMsg(CmdMap::CONTROL_GET_BATTERY_INFO, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -341,7 +341,7 @@ class Control implements ControlInterface
     public function setBoxSetting($box_no, $setting = [], $isSync = -1)
     {
 //        $select = ['PULSE=120', 'FREQ=15', 'VIBFILTERREMINDT=20', 'DFTBLEBONDKEY=NULL', 'BLEKG=1'];
-        $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CMD_REMOTE_CONFIG);
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CMD_REMOTE_CONFIG);
         $str = $this->makeSendMsg($setting, $msg_id, CmdMap::CMD_REMOTE_CONFIG, false);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
@@ -392,11 +392,11 @@ class Control implements ControlInterface
      */
     private function send($box_no, $msg, $isSync = -1, $msgId = '')
     {
-        Gateway::$registerAddress = self::$registerAddress;
+        Gateway::$registerAddress = $this->registerAddress;
         if (!Gateway::isUidOnline($box_no)) return false;
 
         if ($isSync === -1) {
-            $isSync = self::$isSync;
+            $isSync = $this->isSync;
         } else {
             $isSync = (bool)$isSync;
         }
@@ -407,7 +407,7 @@ class Control implements ControlInterface
 
             if ($isSync) {
                 //是否获取相应
-                $redis = self::$redis;
+                $redis = $this->redis;
                 $response = false;
 
                 for ($i = 0; $i <= 30; $i++) {
@@ -558,7 +558,7 @@ class Control implements ControlInterface
             $cacheNames[] = "cache:min:{$types}:{$box_no}";
         }
         if (!count($cacheNames)) return false;
-        self::$redis->del($cacheNames);
+        $this->bikeStatusSync->delKeys($cacheNames);
     }
 
     /**

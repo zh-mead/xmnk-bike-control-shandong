@@ -15,21 +15,21 @@ class Control implements ControlInterface
     const START_TAG = 'aa55';
     const CMD_WILD = '00';
 
-    private static $registerAddress = '';
-    protected static $isSync = false;
-    protected static $userRoleTag = 'user';
-    protected static $bikeStatusSync = false;
-    protected static $isDev = false;
-    protected static $isAutoBikeStatusSync = false;
+    private $registerAddress = '';
+    private $bikeStatusSync = false;
+    public $isSync = false;
+    public $userRoleTag = 'user';
+    public $isDev = false;
+    public $isAutoBikeStatusSync = false;
 
     public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
-        self::$registerAddress = $registerAddress;
-        self::$isSync = $isSync;
-        self::$userRoleTag = $userRoleTag;
-        self::$bikeStatusSync = $bikeStatusSync;
-        self::$isDev = $isDev;
-        self::$isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
+        $this->registerAddress = $registerAddress;
+        $this->isSync = $isSync;
+        $this->userRoleTag = $userRoleTag;
+        $this->bikeStatusSync = $bikeStatusSync;
+        $this->isDev = $isDev;
+        $this->isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
     }
 
     /**
@@ -57,7 +57,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (is_array($cacheOtherData) && self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(self::$userRoleTag, $box_no, $cacheOtherData);
+        if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus($this->userRoleTag, $box_no, $cacheOtherData);
 
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
@@ -75,9 +75,9 @@ class Control implements ControlInterface
      */
     public function closeLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) {
-            $location = self::$bikeStatusSync->byBikeNoGetLocation($box_no);
-            self::$bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
+        if ($this->isAutoBikeStatusSync) {
+            $location = $this->bikeStatusSync->byBikeNoGetLocation($box_no);
+            $this->bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
         }
 
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
@@ -95,7 +95,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(self::$userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus($this->userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
@@ -112,7 +112,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(self::$userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($this->userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -210,7 +210,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(self::$userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric($this->userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -226,7 +226,7 @@ class Control implements ControlInterface
      */
     public function closeLowElectricLimit($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeNoElectric(self::$userRoleTag, $box_no);
+        $this->bikeStatusSync->toBikeNoElectric($this->userRoleTag, $box_no);
         return true;
     }
 
@@ -238,7 +238,7 @@ class Control implements ControlInterface
      */
     public function bikeOnLine($box_no, $lat = 0, $lng = 0, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
+        $this->bikeStatusSync->toBikeOnLineStatus($box_no, $lng, $lat);
         return true;
     }
 
@@ -250,7 +250,7 @@ class Control implements ControlInterface
      */
     public function bikeOffLine($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeOffLineStatus($box_no);
+        $this->bikeStatusSync->toBikeOffLineStatus($box_no);
         return true;
     }
 
@@ -261,7 +261,7 @@ class Control implements ControlInterface
      */
     public function getRideBikeOrderInfo($box_no)
     {
-        return self::$bikeStatusSync->getRideBikeOrderInfo($box_no);
+        return $this->bikeStatusSync->getRideBikeOrderInfo($box_no);
     }
 
     /**
@@ -271,7 +271,7 @@ class Control implements ControlInterface
      */
     public function byBoxNoGetLocation($box_no)
     {
-        return self::$bikeStatusSync->byBoxNoGetLocation($box_no);
+        return $this->bikeStatusSync->byBoxNoGetLocation($box_no);
     }
 
 
@@ -481,29 +481,29 @@ class Control implements ControlInterface
         $msg_id = self::getRandHex();
         $msg = self::encode($cmd, $param, $msg_id);
 
-        Gateway::$registerAddress = self::$registerAddress;
+        Gateway::$registerAddress = $this->registerAddress;
         if (!Gateway::isUidOnline($box_no)) return false;
 
         if ($isSync === -1) {
-            $isSync = self::$isSync;
+            $isSync = $this->isSync;
         } else {
             $isSync = (bool)$isSync;
         }
 
         try {
-            if (self::$isDev) var_dump($msg);
+            if ($this->isDev) var_dump($msg);
             Gateway::sendToUid($box_no, hex2bin($msg));
             if ($isSync) {
                 //是否获取相应
-//                $redis = self::$redis;
+//                $redis = $this->redis;
                 $response = false;
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
-                    if (self::$isDev) var_dump($i . "==>cmd:{$box_no}:{$msg_id}");
+                    if ($this->isDev) var_dump($i . "==>cmd:{$box_no}:{$msg_id}");
 
 //                    $data = $redis->get(BaseMap::CACHE_KEY . ":cmd:{$box_no}:{$msg_id}");
-                    $data = self::$bikeStatusSync->getBikeBoxInfo(":cmd:{$box_no}:{$msg_id}");
+                    $data = $this->bikeStatusSync->getBikeBoxInfo(":cmd:{$box_no}:{$msg_id}");
                     if ($data) {
                         $response = $this->decodeData($data);
                         break;
@@ -607,7 +607,7 @@ class Control implements ControlInterface
      * @param $type
      * User: Mead
      */
-    public static function delRedisCache($box_no, $types)
+    public function delRedisCache($box_no, $types)
     {
         $cacheNames = [];
         if (is_array($types)) {
@@ -618,7 +618,7 @@ class Control implements ControlInterface
             $cacheNames[] = "cache:min:{$types}:{$box_no}";
         }
         if (!count($cacheNames)) return false;
-//        self::$redis->del($cacheNames);
-        self::$bikeStatusSync->delKeys($cacheNames);
+//        $this->redis->del($cacheNames);
+        $this->bikeStatusSync->delKeys($cacheNames);
     }
 }
