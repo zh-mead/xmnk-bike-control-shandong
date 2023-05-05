@@ -149,6 +149,13 @@ class BikeControl
         return $this;
     }
 
+    /**
+     * 这是参数
+     * @param $property
+     * @param $val
+     * @return $this
+     * @throws \Exception
+     */
     public function setControlProperty($property, $val)
     {
         if (!count($this->controlKeys)) throw new \Exception('必须配置一个中控');
