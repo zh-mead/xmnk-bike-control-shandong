@@ -50,6 +50,7 @@ class BikeControl
     protected $controlKeys = [];
     protected $defaultGateway;
     protected $redis = false;
+    protected $bikeStatusSyncModel = false;
 
     /**
      * Constructor.
@@ -94,6 +95,7 @@ class BikeControl
         if (!array_key_exists('registerGateways', $configs)) throw new  \Exception('registerGateways找不到该配置项');
 
         $bikeStatusSync = new BikeStatusSync($this->redis);
+        $this->bikeStatusSyncModel = $bikeStatusSync;
 
         $otherConfig = [
             'isAutoBikeStatusSync' => true
@@ -145,6 +147,14 @@ class BikeControl
 
         $this->control = $this->controls[$type];
         return $this;
+    }
+
+    /**
+     * @return BikeStatusSync
+     */
+    public function bikeStatusSyncModel()
+    {
+        return $this->bikeStatusSyncModel;
     }
 
     public function __call($method, $parameters)

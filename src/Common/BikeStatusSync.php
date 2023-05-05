@@ -43,10 +43,12 @@ class BikeStatusSync
     }
 
     /**
-     * 车辆处于骑行状态 (用户订单时（data: 订单id[id],区域id[area_id],车辆id[bike_id]）)
-     * @param $bike_no
-     * @param array $data
-     * User: Mead
+     * 车辆处于骑行状态
+     * @param $role
+     * @param $box_no
+     * @param $data
+     * @param $merchant_id
+     * @return bool
      */
     public function toBikeRideStatus($role, $box_no, $data = [], $merchant_id = 1)
     {
@@ -71,7 +73,10 @@ class BikeStatusSync
     /**
      * 车辆处于等待骑行状态
      * @param $box_no
-     * User: Mead
+     * @param $lng
+     * @param $lat
+     * @param $merchant_id
+     * @return bool
      */
     public function toBikeWaitRideStatus($box_no, $lng = 0, $lat = 0, $merchant_id = 1)
     {
@@ -88,7 +93,7 @@ class BikeStatusSync
     /**
      * 改变车为订单为临时停车
      * @param $box_no
-     * User: Mead
+     * @return bool
      */
     public function toBikeTemporaryWaitRideStatus($box_no)
     {
