@@ -57,7 +57,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(self::$userRoleTag, $box_no, $cacheOtherData);
 
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
@@ -95,7 +95,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryWaitRideStatus(self::$userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
@@ -112,7 +112,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeTemporaryRideStatus(self::$userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -210,7 +210,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeGetElectric(self::$userRoleTag, $box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -226,7 +226,7 @@ class Control implements ControlInterface
      */
     public function closeLowElectricLimit($box_no, $isSync = -1)
     {
-        self::$bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
+        self::$bikeStatusSync->toBikeNoElectric(self::$userRoleTag, $box_no);
         return true;
     }
 
