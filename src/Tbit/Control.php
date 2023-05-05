@@ -285,6 +285,26 @@ class Control implements ControlInterface
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
+    /**
+     * 获取骑行订单信息
+     * @param $box_no
+     * @return mixed
+     */
+    public function getRideBikeOrderInfo($box_no)
+    {
+        return self::$bikeStatusSync->getRideBikeOrderInfo($box_no);
+    }
+
+    /**
+     * 获取最后位置
+     * @param $box_no
+     * @return mixed
+     */
+    public function byBoxNoGetLocation($box_no)
+    {
+        return self::$bikeStatusSync->byBoxNoGetLocation($box_no);
+    }
+
 //    /**
 //     * 融合定位包
 //     * @param $box_no

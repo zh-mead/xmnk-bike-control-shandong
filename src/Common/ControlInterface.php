@@ -207,4 +207,18 @@ interface ControlInterface
      * @return mixed
      */
     public function setBikeSpeedLimit($box_no, $speed, $isSync);
+
+    /**
+     * 获取骑行订单
+     * @param $box_no
+     * @return mixed
+     */
+    public function getRideBikeOrderInfo($box_no);
+
+    /**
+     * 获取最后定位信息
+     * @param $box_no
+     * @return mixed
+     */
+    public function byBoxNoGetLocation($box_no);
 }

@@ -254,6 +254,26 @@ class Control implements ControlInterface
         return true;
     }
 
+    /**
+     * 获取骑行订单信息
+     * @param $box_no
+     * @return mixed
+     */
+    public function getRideBikeOrderInfo($box_no)
+    {
+        return self::$bikeStatusSync->getRideBikeOrderInfo($box_no);
+    }
+
+    /**
+     * 获取最后位置
+     * @param $box_no
+     * @return mixed
+     */
+    public function byBoxNoGetLocation($box_no)
+    {
+        return self::$bikeStatusSync->byBoxNoGetLocation($box_no);
+    }
+
 
     /**
      * 查询车的配置

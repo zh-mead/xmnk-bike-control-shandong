@@ -206,7 +206,7 @@ class BikeStatusSync
      * @return
      * Author: Mead
      */
-    public function byBikeNoGetLocation($box_no)
+    public function byBoxNoGetLocation($box_no)
     {
         try {
             //融合定位包
