@@ -57,7 +57,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(self::$userRoleTag, $box_no, $cacheOtherData);
+        if (is_array($cacheOtherData) && self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(self::$userRoleTag, $box_no, $cacheOtherData);
 
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [

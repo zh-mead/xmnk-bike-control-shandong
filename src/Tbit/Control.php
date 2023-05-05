@@ -53,7 +53,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
+        if (is_array($cacheOtherData) && self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
 
         $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
