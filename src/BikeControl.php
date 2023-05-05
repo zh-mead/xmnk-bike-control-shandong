@@ -70,6 +70,7 @@ class BikeControl
      */
     public function init(array $configs)
     {
+        $this->controlKeys = [];
         //连接redis
         try {
             $this->redis = new \Redis();

@@ -3,6 +3,7 @@
 namespace ZhMead\XmnkBikeControl\Common;
 
 use ZhMead\XmnkBikeControl\Common\Maps\BaseMap;
+use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 
 class BikeStatusSync
 {
@@ -15,6 +16,7 @@ class BikeStatusSync
     const REDIS_BIKE_LOCATION_TAG = 'bike_locations';
     const REDIS_RIDE_BIKE_ORDERS_TAG = 'ride_orders:';
     const REDIS_RIDE_BIKE_ORDERS_COUNT_TAG = 'statistics:ride_orders_count';
+    const REDIS_RIDE_BIKE_WORKER_ORDERS_TAG = 'ride_orders_worker';
 
     public function __construct($redis)
     {
@@ -66,7 +68,13 @@ class BikeStatusSync
 //        }
         $bike_key = self::REDIS_BIKE_LOCATION_TAG . ":{$merchant_id}";
         //删除未骑行状态
+//        if ($is_put_status) {
+//            self::$redis->zrem($bike_key, $box_no);
+//        }
         self::$redis->zrem($bike_key, $box_no);
+//        if ($role == UserRoleMap::WORKER) {
+//            self::$redis->hset(self::REDIS_RIDE_BIKE_WORKER_ORDERS_TAG, $box_no, $data['admin_id']);
+//        }
         return true;
     }
 
