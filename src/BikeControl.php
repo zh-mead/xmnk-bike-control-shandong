@@ -32,6 +32,7 @@ use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
  * @method mixed selectBoxServerUrl(string $box_no)
  * @method mixed selectBikeStatus(string $box_no, bool $isSync = false)
  * @method bool nowBikeLocation(string $box_no, bool $isSync = false)
+ * @method bool nowBikeBatteryMSG(string $box_no, bool $isSync = false)
  * @method bool setBoxSetting(string $box_no, array $setting = [], bool $isSync = false)
  * @method bool setBoxServerUrl(string $box_no, string $server, bool $isSync = false)
  * @method bool setBikeSpeedLimit(string $box_no, mixed $speed, bool $isSync = false)
