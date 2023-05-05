@@ -111,6 +111,8 @@ class BikeControl
             $this->controlKeys[] = DeviceMap::WeiKeMu;
         }
 
+        if (array_key_exists('numGatewayMaps', $configs)) $this->controlKeys = $configs['numGatewayMaps'];
+
         if (!count($this->controlKeys)) {
             throw new \Exception('必须配置一个中控');
         }
@@ -129,10 +131,12 @@ class BikeControl
     public function device($type)
     {
         if (is_numeric($type)) {
+            if (count($this->controlKeys) <= $type) throw new \Exception('匹配不到对应的厂商');
             $type = $this->controlKeys[$type];
         }
 
         if (!in_array($type, $this->controlKeys)) throw new \Exception('找不到该厂商');
+        if ($type == DeviceMap::NO) throw new \Exception('没有匹配到高厂商');
 
         if (!count($this->controlKeys)) throw new \Exception('必须配置一个中控');
 
