@@ -10,7 +10,7 @@ use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 /**
  * 车辆控制
  * @method bool bell(string $box_no, bool $isSync = false)
- * @method bool openLock(string $box_no, bool $isSync = false, $cacheOtherData = [])
+ * @method bool openLock(string $box_no, $cacheOtherData = [], bool $isSync = false)
  * @method bool closeLock(string $box_no, bool $isSync = false)
  * @method bool temporaryCloseLock(string $box_no, bool $isSync = false)
  * @method bool temporaryOpnLock(string $box_no, bool $isSync = false)

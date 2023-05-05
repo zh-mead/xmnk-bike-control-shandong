@@ -55,7 +55,7 @@ class Control implements ControlInterface
      * @return bool|mixed
      * @throws \Exception
      */
-    public function openLock($box_no, $isSync = -1, $cacheOtherData = [])
+    public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
         if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
 

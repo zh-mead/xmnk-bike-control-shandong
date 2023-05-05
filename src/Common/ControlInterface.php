@@ -19,7 +19,7 @@ interface ControlInterface
      * @param $isSync
      * @return mixed
      */
-    public function openLock($box_no, $isSync, $cacheOtherData = []);
+    public function openLock($box_no, $cacheOtherData = [], $isSync);
 
     /**
      * 关锁

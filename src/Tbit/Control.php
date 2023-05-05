@@ -51,9 +51,9 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function openLock($box_no, $isSync = -1)
+    public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no);
+        if (self::$isAutoBikeStatusSync) self::$bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
 
         $msg_id = $this->makeMsgId($box_no, self::$userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
