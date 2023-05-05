@@ -5,10 +5,37 @@ namespace ZhMead\XmnkBikeControl;
 use ZhMead\XmnkBikeControl\Common\BikeStatusSync;
 use ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
 use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
-use ZhMead\XmnkBikeControl\Common\Maps\UserTypeMap;
+
 
 /**
- * Class EasySms.
+ * 车辆控制
+ * @method bool bell(string $box_no, bool $isSync)
+ * @method bool openLock(string $box_no, bool $isSync)
+ * @method bool closeLock(string $box_no, bool $isSync)
+ * @method bool temporaryCloseLock(string $box_no, bool $isSync)
+ * @method bool temporaryOpnLock(string $box_no, bool $isSync)
+ * @method bool openBatteryLock(string $box_no, bool $isSync)
+ * @method bool closeBatteryLock(string $box_no, bool $isSync)
+ * @method bool outAreaPlayVideo(string $box_no, bool $isSync)
+ * @method bool playVideo(string $box_no, $video_cmd, bool $isSync)
+ * @method bool outAreaLoseElectric(string $box_no, bool $isSync)
+ * @method bool outAreaGetElectric(string $box_no, bool $isSync)
+ * @method bool closeOutAreaLoseElectric(string $box_no, bool $isSync)
+ * @method bool closeLowElectricLimit(string $box_no, bool $isSync)
+ * @method bool bikeOnLine(string $box_no, $lat, $lng, bool $isSync)
+ * @method bool bikeOffLine(string $box_no, bool $isSync)
+ * @method bool rebootBox(string $box_no, bool $isSync)
+ * @method bool openHelmet(string $box_no, bool $isSync)
+ * @method bool cloneHelmet(string $box_no, bool $isSync)
+ * @method mixed selectHelmetStatus(string $box_no, bool $isSync)
+ * @method mixed selectBoxSetting(string $box_no, array $setting)
+ * @method mixed selectBoxServerUrl(string $box_no)
+ * @method mixed selectBikeStatus(string $box_no, bool $isSync)
+ * @method bool nowBikeLocation(string $box_no, bool $isSync)
+ * @method bool setBoxSetting(string $box_no, array $setting, bool $isSync)
+ * @method bool setBoxServerUrl(string $box_no, string $server, bool $isSync)
+ * @method bool setBikeSpeedLimit(string $box_no, mixed $speed, bool $isSync)
+ *
  */
 class BikeControl
 {
