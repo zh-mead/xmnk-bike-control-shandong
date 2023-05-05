@@ -76,7 +76,7 @@ class Control implements ControlInterface
     public function closeLock($box_no, $isSync = -1)
     {
         if ($this->isAutoBikeStatusSync) {
-            $location = $this->bikeStatusSync->byBikeNoGetLocation($box_no);
+            $location = $this->bikeStatusSync->byBoxNoGetLocation($box_no);
             $this->bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
         }
 

@@ -68,8 +68,8 @@ class Control implements ControlInterface
      */
     public function closeLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) {
-            $location = $this->bikeStatusSync->byBikeNoGetLocation($box_no);
+        if ($this->isAutoBikeStatusSync) {
+            $location = $this->bikeStatusSync->byBoxNoGetLocation($box_no);
             $this->bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
         }
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_LOCK);
@@ -85,7 +85,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
@@ -99,7 +99,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
@@ -189,7 +189,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if (self::$isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
         return $this->outAreaGetElectric($box_no, $isSync);
     }
 
@@ -402,7 +402,7 @@ class Control implements ControlInterface
         }
 
         try {
-            if (self::$isDev) var_dump($msg);
+            if ($this->isDev) var_dump($msg);
             Gateway::sendToUid($box_no, hex2bin($msg));
 
             if ($isSync) {
@@ -412,7 +412,7 @@ class Control implements ControlInterface
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
-                    if (self::$isDev) var_dump($i);
+                    if ($this->isDev) var_dump($i);
                     $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msgId);
                     if ($data) {
                         $response = $this->decodeData($data);
