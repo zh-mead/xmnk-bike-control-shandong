@@ -494,7 +494,7 @@ class Control implements ControlInterface
         $msg = [
             'c' => $cmd,
             'tid' => $msg_id,
-            'para' => $param,
+            'param' => $param,
         ];
         $msg = json_encode($msg, true);
         $groupName = $this->groupName;
