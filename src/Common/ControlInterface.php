@@ -43,7 +43,7 @@ interface ControlInterface
      * @param $isSync
      * @return mixed
      */
-    public function temporaryOpnLock($box_no, $isSync);
+    public function temporaryOpenLock($box_no, $isSync);
 
     /**
      * 打开电池锁
