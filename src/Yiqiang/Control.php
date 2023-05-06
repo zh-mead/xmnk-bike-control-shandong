@@ -2,7 +2,6 @@
 
 namespace ZhMead\XmnkBikeControl\Yiqiang;
 
-use GatewayClient\Gateway;
 use ZhMead\XmnkBikeControl\Common\ControlInterface;
 use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 use ZhMead\XmnkBikeControl\Yiqiang\Maps\CmdMap;
@@ -10,11 +9,6 @@ use ZhMead\XmnkBikeControl\Yiqiang\Maps\VideoMap;
 
 class Control implements ControlInterface
 {
-    //分割符
-    const SPLIT_TAG = '';
-    const START_TAG = 'aa55';
-    const CMD_WILD = '00';
-
     private $client = '';
     private $groupName = '';
     private $bikeStatusSync = false;
@@ -48,7 +42,7 @@ class Control implements ControlInterface
     {
         $cmd = CmdMap::COMMAND_CONTROL_VOICE_BROADCAST;
         $param = [
-            'idx' => VideoMap::BELL,
+            'idx' => VideoMap::VOICE_STAFF_SEARCH_CAR,
             "volume" => 50
         ];
         return $this->send($box_no, $cmd, $param, $isSync);
@@ -157,7 +151,7 @@ class Control implements ControlInterface
      */
     public function outAreaPlayVideo($box_no, $isSync = -1)
     {
-        return $this->playVideo($box_no, VideoMap::NEAR_SERVICE_AREA_SOUND, $isSync);
+        return $this->playVideo($box_no, VideoMap::VOICE_SUPER_OPERATIONAL_AREA, $isSync);
     }
 
     /**
@@ -502,17 +496,14 @@ class Control implements ControlInterface
         try {
             if ($this->isDev) var_dump($msg);
             $this->client->publish($topic, $msg);
-//            Gateway::sendToUid($box_no, hex2bin($msg));
             if ($isSync) {
                 //是否获取相应
-//                $redis = $this->redis;
                 $response = false;
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
                     if ($this->isDev) var_dump($i . "==>cmd:{$box_no}:{$msg_id}");
 
-//                    $data = $redis->get(BaseMap::CACHE_KEY . ":cmd:{$box_no}:{$msg_id}");
                     $data = $this->bikeStatusSync->getBikeBoxInfo(":cmd:{$box_no}:{$msg_id}");
                     if ($data) {
                         $response = $this->decodeData($data);
@@ -530,62 +521,6 @@ class Control implements ControlInterface
         }
 
         return true;
-    }
-
-    /**
-     * 编码
-     * @param $data
-     * @return string
-     * User: Mead
-     */
-    private function encode($cmd, $param = [], $randHex = false)
-    {
-        $body = [
-            'c' => $cmd,
-            'param' => $param
-        ];
-
-        $bodyStr = json_encode($body, true);
-        $bodyArrHex = $this->str2arr(bin2hex($bodyStr));
-        $bodyNumsHex = $this->byNumGetDataLength(count($bodyArrHex));
-
-        if ($randHex === false) {
-            $randHex = $this->getRandHex();
-        }
-
-        $msg = [
-            self::START_TAG,
-            self::CMD_WILD,
-            $randHex,
-            $bodyNumsHex,
-            implode('', $bodyArrHex)
-        ];
-
-        $msg = implode('', $msg);
-        return $msg;
-    }
-
-    /**
-     * 格式数组
-     * @param $arr
-     * @return array
-     * User: Mead
-     */
-    private function str2arr($str)
-    {
-        return str_split($str, 2);
-    }
-
-    /**
-     * 获取数据包的长度
-     * @param $num
-     * @return string
-     * User: Mead
-     */
-    private function byNumGetDataLength($num)
-    {
-        $length = dechex($num);
-        return str_pad($length, 4, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -629,7 +564,6 @@ class Control implements ControlInterface
             $cacheNames[] = "cache:min:{$types}:{$box_no}";
         }
         if (!count($cacheNames)) return false;
-//        $this->redis->del($cacheNames);
         $this->bikeStatusSync->delKeys($cacheNames);
     }
 }
