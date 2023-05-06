@@ -110,7 +110,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function temporaryOpnLock($box_no, $isSync = -1)
+    public function temporaryOpenLock($box_no, $isSync = -1)
     {
         if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;

@@ -97,7 +97,7 @@ class Control implements ControlInterface
      * @return bool
      * User: Mead
      */
-    public function temporaryOpnLock($box_no, $isSync = -1)
+    public function temporaryOpenLock($box_no, $isSync = -1)
     {
         if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($box_no);
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);

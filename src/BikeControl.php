@@ -13,7 +13,7 @@ use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
  * @method bool openLock(string $box_no, $cacheOtherData = [], bool $isSync = false)
  * @method bool closeLock(string $box_no, bool $isSync = false)
  * @method bool temporaryCloseLock(string $box_no, bool $isSync = false)
- * @method bool temporaryOpnLock(string $box_no, bool $isSync = false)
+ * @method bool temporaryOpenLock(string $box_no, bool $isSync = false)
  * @method bool openBatteryLock(string $box_no, bool $isSync = false)
  * @method bool closeBatteryLock(string $box_no, bool $isSync = false)
  * @method bool outAreaPlayVideo(string $box_no, bool $isSync = false)
