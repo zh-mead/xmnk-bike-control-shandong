@@ -53,7 +53,7 @@ class Control implements ControlInterface
      */
     public function openLock($box_no, $cacheOtherData = [], $isSync = -1)
     {
-        if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus(UserRoleMap::USER, $box_no, $cacheOtherData);
+        if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus($this->userRoleTag, $box_no, $cacheOtherData);
 
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_UNLOCK, $msg_id);
@@ -85,7 +85,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus($box_no);
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_CLOSE_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
@@ -99,7 +99,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($box_no);
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK);
         $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_TEMPORARY_UNLOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
@@ -189,7 +189,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric(UserRoleMap::USER, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric($box_no);
         return $this->outAreaGetElectric($box_no, $isSync);
     }
 
@@ -201,7 +201,7 @@ class Control implements ControlInterface
      */
     public function closeLowElectricLimit($box_no, $isSync = -1)
     {
-        $this->bikeStatusSync->toBikeNoElectric(UserRoleMap::USER, $box_no);
+        $this->bikeStatusSync->toBikeNoElectric($box_no);
         return true;
     }
 

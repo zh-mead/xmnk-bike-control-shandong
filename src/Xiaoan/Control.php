@@ -95,7 +95,7 @@ class Control implements ControlInterface
      */
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus($this->userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus($box_no);
         $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
         $param = [
             'defend' => 1,
@@ -112,7 +112,7 @@ class Control implements ControlInterface
      */
     public function temporaryOpnLock($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($this->userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -210,7 +210,7 @@ class Control implements ControlInterface
      */
     public function closeOutAreaLoseElectric($box_no, $isSync = -1)
     {
-        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric($this->userRoleTag, $box_no);
+        if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeGetElectric($box_no);
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
@@ -226,7 +226,7 @@ class Control implements ControlInterface
      */
     public function closeLowElectricLimit($box_no, $isSync = -1)
     {
-        $this->bikeStatusSync->toBikeNoElectric($this->userRoleTag, $box_no);
+        $this->bikeStatusSync->toBikeNoElectric($box_no);
         return true;
     }
 
