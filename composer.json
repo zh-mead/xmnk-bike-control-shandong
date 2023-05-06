@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "workerman/gatewayclient": "^3.0"
+        "workerman/gatewayclient": "^3.0",
+        "php-mqtt/client": "^1.8"
     },
     "autoload": {
         "psr-4": {

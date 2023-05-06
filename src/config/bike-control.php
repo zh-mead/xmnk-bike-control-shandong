@@ -1,14 +1,32 @@
 <?php
+
+use \ZhMead\XmnkBikeControl\Common\Maps\DeviceMap;
+use \ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
+
 return [
-    'gateways' => [
+    'registerGateways' => [
         'tbit' => [
-            'registerAddress' => '127.0.0.1:12238'
+            'registerAddress' => '0.0.0.0:1238'
         ],
         'xiaoan' => [
-            'registerAddress' => '127.0.0.1:12238'
+            'registerAddress' => '0.0.0.0:12238'
         ],
-        'weikemu' => [
-            'registerAddress' => '127.0.0.1:12238'
-        ],
-    ]
+    ],
+    'numGatewayMaps' => [
+        DeviceMap::NO,
+        DeviceMap::TBit,
+        DeviceMap::NO,
+        DeviceMap::XiaoAn
+    ],
+    'defaultGateway' => DeviceMap::TBit,
+    'redis' => [
+        'host' => 'node2',
+        'port' => 6379,
+        'password' => '123456',
+        'database' => 3
+    ],
+    'isSyncCmd' => false,
+    'isAutoBikeStatusSync' => true,
+    'userRoleTag' => UserRoleMap::USER,
+    'isDev' => false,
 ];
