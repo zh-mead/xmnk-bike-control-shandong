@@ -32,7 +32,7 @@ use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
  * @method mixed selectBoxServerUrl(string $box_no)
  * @method mixed selectBikeStatus(string $box_no, bool $isSync = false)
  * @method bool nowBikeLocation(string $box_no, bool $isSync = false)
- * @method bool nowBikeBatteryMSG(string $box_no, bool $isSync = false)
+ * @method bool nowBikeBatteryMSG(string $box_no, bool $isSoc, bool $isSync = false)
  * @method bool setBoxSetting(string $box_no, array $setting = [], bool $isSync = false)
  * @method bool setBoxServerUrl(string $box_no, string $server, bool $isSync = false)
  * @method bool setBikeSpeedLimit(string $box_no, mixed $speed, bool $isSync = false)
@@ -105,15 +105,15 @@ class BikeControl
 
         $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
-            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
             $this->controlKeys[] = DeviceMap::TBit;
         }
         if (array_key_exists(DeviceMap::XiaoAn, $gateways)) {
-            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
             $this->controlKeys[] = DeviceMap::XiaoAn;
         }
         if (array_key_exists(DeviceMap::WeiKeMu, $gateways)) {
-            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu]['registerAddress'], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
             $this->controlKeys[] = DeviceMap::WeiKeMu;
         }
         if (array_key_exists(DeviceMap::Yiqaing, $gateways)) {

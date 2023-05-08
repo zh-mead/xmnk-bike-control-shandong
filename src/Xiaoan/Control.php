@@ -22,9 +22,9 @@ class Control implements ControlInterface
     public $isDev = false;
     public $isAutoBikeStatusSync = false;
 
-    public function __construct($registerAddress, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
+    public function __construct($config, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
-        $this->registerAddress = $registerAddress;
+        $this->registerAddress = $config['registerAddress'];
         $this->isSync = $isSync;
         $this->userRoleTag = $userRoleTag;
         $this->bikeStatusSync = $bikeStatusSync;

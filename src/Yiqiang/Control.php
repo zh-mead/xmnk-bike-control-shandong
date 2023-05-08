@@ -413,9 +413,10 @@ class Control implements ControlInterface
         }
 
         if (array_key_exists('maxecuspeed', $setting)) {
-            $index = 7;
-            $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
-            $this->setBikeSpeedLimit($box_no, $p2['speed']);
+//            $index = 7;
+//            $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
+//            $this->setBikeSpeedLimit($box_no, $p2['maxecuspeed']);
+            $param['speedLimits'] = $setting['maxecuspeed'];
 //            self::setBikeSpeedLimit($box_no, CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2);
         }
 
