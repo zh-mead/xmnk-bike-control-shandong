@@ -96,10 +96,8 @@ class Control implements ControlInterface
     public function temporaryCloseLock($box_no, $isSync = -1)
     {
         if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryWaitRideStatus($box_no);
-        $cmd = CmdMap::COMMAND_ANTITHEFT_SWITCH;
-        $param = [
-            'defend' => 1,
-        ];
+        $cmd = CmdMap::COMMAND_TEMPORARY_PARK;
+        $param = [];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
 
@@ -112,10 +110,8 @@ class Control implements ControlInterface
     public function temporaryOpenLock($box_no, $isSync = -1)
     {
         if ($this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeTemporaryRideStatus($box_no);
-        $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
-        $param = [
-            'acc' => 1
-        ];
+        $cmd = CmdMap::COMMAND_TEMPORARY_PARK_CONTINUE_CYCLING;
+        $param = [];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
 
