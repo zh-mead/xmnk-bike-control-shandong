@@ -305,11 +305,15 @@ class Control implements ControlInterface
      * @return bool|mixed
      * @throws \Exception
      */
-    public function setBoxServerUrl($box_no, $server = '', $isSync = -1)
+    public function setBoxServerUrl($box_no, $server, $isSync = -1)
     {
         $cmd = CmdMap::COMMAND_MODIFY_SERVER_ADDRESS;
         $param = [
-            'server' => $server
+            'server' => $server['server'],
+            "port" => $server['port'],
+            "pswd" => $server['pswd'],
+            "group" => $server['group'],
+            "user" => $server['user']
         ];
         return $this->send($box_no, $cmd, $param, true);
     }
