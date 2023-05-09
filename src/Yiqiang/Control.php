@@ -2,6 +2,7 @@
 
 namespace ZhMead\XmnkBikeControl\Yiqiang;
 
+use PhpMqtt\Client\ConnectionSettings;
 use ZhMead\XmnkBikeControl\Common\ControlInterface;
 use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
 use ZhMead\XmnkBikeControl\Yiqiang\Maps\CmdMap;
@@ -20,8 +21,10 @@ class Control implements ControlInterface
     public function __construct($config, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
         $mqtt = new \PhpMqtt\Client\MqttClient($config['host'], $config['port'], $config['client_id'] . '-' . rand(1, 1000));
+        $connectionSettings = new ConnectionSettings();
+        $connectionSettings = $connectionSettings->setUsername($config['username'])->setPassword($config['password']);
 
-        $mqtt->connect();
+        $mqtt->connect($connectionSettings);
         $this->client = $mqtt;
         $this->groupName = $config['groupName'];
         $this->isSync = $isSync;
