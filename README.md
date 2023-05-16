@@ -6,7 +6,7 @@
 ## Installing
 
 ```shell
-$ composer require zh-mead/xmnk-bike-control -vvv
+$ composer require zh-mead/xmnk-bike-control-shandong -vvv
 ```
 
 ## Usage
