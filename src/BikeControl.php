@@ -112,14 +112,6 @@ class BikeControl
             $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
             $this->controlKeys[] = DeviceMap::XiaoAn;
         }
-        if (array_key_exists(DeviceMap::WeiKeMu, $gateways)) {
-            $this->controls[DeviceMap::WeiKeMu] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::WeiKeMu], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
-            $this->controlKeys[] = DeviceMap::WeiKeMu;
-        }
-        if (array_key_exists(DeviceMap::Yiqaing, $gateways)) {
-            $this->controls[DeviceMap::Yiqaing] = new \ZhMead\XmnkBikeControl\Yiqiang\Control($gateways[DeviceMap::Yiqaing], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
-            $this->controlKeys[] = DeviceMap::Yiqaing;
-        }
 
         if (array_key_exists('numGatewayMaps', $configs)) $this->controlKeys = $configs['numGatewayMaps'];
 

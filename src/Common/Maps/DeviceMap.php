@@ -7,6 +7,4 @@ class DeviceMap
     const  TBit = 'tbit';
     const  XiaoAn = 'xiaoan';
     const  WeiKeMu = 'weikemu';
-    const  Baimi = 'baimi';
-    const  Yiqaing = 'yiqiang';
 }
