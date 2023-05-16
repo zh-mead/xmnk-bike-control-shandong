@@ -134,11 +134,28 @@ interface ControlInterface
      */
     public function rebootBox($box_no, $isSync);
 
-//    public function openHelmet($box_no, $isSync);
-//
-//    public function cloneHelmet($box_no, $isSync);
-//
-//    public function selectHelmetStatus($box_no, $isSync);
+    /**
+     * 打开头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return mixed
+     */
+    public function openHelmet($box_no, $isSync);
+
+    /**
+     * 关闭头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return mixed
+     */
+    public function closeHelmet($box_no, $isSync);
+
+    /**
+     * 查询头盔锁的状态
+     * @param $box_no
+     * @return mixed
+     */
+    public function selectHelmetStatus($box_no);
 
     /**
      * 查询车辆配置

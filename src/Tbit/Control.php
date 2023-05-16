@@ -194,6 +194,47 @@ class Control implements ControlInterface
     }
 
     /**
+     * 打开头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function openHelmet($box_no, $isSync = -1)
+    {
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_OPEN_BACKSEAT);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BACKSEAT, $msg_id);
+        return $this->send($box_no, $str, $isSync, $msg_id);
+    }
+
+    /**
+     * 关闭头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function closeHelmet($box_no, $isSync = -1)
+    {
+        $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_BACKSEAT);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_BACKSEAT, $msg_id);
+        return $this->send($box_no, $str, $isSync, $msg_id);
+    }
+
+    /**
+     * 查询头盔状态
+     * @param $box_no
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function selectHelmetStatus($box_no)
+    {
+        $location = $this->bikeStatusSync->byBoxNoGetLocation($box_no);
+        if (isset($location['isHelmetUnlock'])) return $location['isHelmetUnlock'];
+        return 0;
+    }
+
+    /**
      * 关闭对车辆低电骑行限制
      * @param $box_no
      * @param $isSync

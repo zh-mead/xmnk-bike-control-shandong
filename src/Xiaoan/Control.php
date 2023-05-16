@@ -219,6 +219,51 @@ class Control implements ControlInterface
     }
 
     /**
+     * 打开头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function openHelmet($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_SWITCH_HELMET_LOCK;
+        $param = [
+            'sw' => 0
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 关闭头盔锁
+     * @param $box_no
+     * @param $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function closeHelmet($box_no, $isSync = -1)
+    {
+        $cmd = CmdMap::COMMAND_SWITCH_HELMET_LOCK;
+        $param = [
+            'sw' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * 查询头盔状态
+     * @param $box_no
+     * @return bool|mixed
+     * @throws \Exception
+     */
+    public function selectHelmetStatus($box_no)
+    {
+        $location = $this->bikeStatusSync->byBoxNoGetLocation($box_no);
+        if (isset($location['isHelmetUnlock'])) return $location['isHelmetUnlock'];
+        return 0;
+    }
+
+    /**
      * 关闭对车辆低电骑行限制
      * @param $box_no
      * @param $isSync

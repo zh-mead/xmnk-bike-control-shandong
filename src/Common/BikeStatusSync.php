@@ -63,18 +63,9 @@ class BikeStatusSync
         $data['is_low_electric_close_bike'] = 1;
         self::$redis->set(self::REDIS_RIDE_BIKE_ORDERS_TAG . $box_no, serialize($data));
 
-//        if (!$merchant_id) {
-//            $merchant_id = Bike::byBikeNoGetMerchantId($bike_no);
-//        }
         $bike_key = self::REDIS_BIKE_LOCATION_TAG . ":{$merchant_id}";
         //删除未骑行状态
-//        if ($is_put_status) {
-//            self::$redis->zrem($bike_key, $box_no);
-//        }
         self::$redis->zrem($bike_key, $box_no);
-//        if ($role == UserRoleMap::WORKER) {
-//            self::$redis->hset(self::REDIS_RIDE_BIKE_WORKER_ORDERS_TAG, $box_no, $data['admin_id']);
-//        }
         return true;
     }
 
@@ -90,9 +81,6 @@ class BikeStatusSync
     {
         self::$redis->expire(self::REDIS_RIDE_BIKE_ORDERS_TAG . $box_no, self::CLOSE_BIKE_TTL);
 
-//        if (!$merchant_id) {
-//            $merchant_id = Bike::byBikeNoGetMerchantId($box_no);
-//        }
         $bike_key = self::REDIS_BIKE_LOCATION_TAG . ":{$merchant_id}";
         self::$redis->geoadd($bike_key, $lng, $lat, $box_no);
         return true;
@@ -173,12 +161,8 @@ class BikeStatusSync
      */
     public function toBikeOnLineStatus($box_no, $lng = 0, $lat = 0, $merchant_id = 1)
     {
-//        self::$redis->hdel(self::REDIS_RIDE_BIKE_ORDERS_TAG, $box_no);
         self::$redis->del([self::REDIS_RIDE_BIKE_ORDERS_TAG . $box_no]);
 
-//        if (!$merchant_id) {
-//            $merchant_id = Bike::byBikeNoGetMerchantId($box_no);
-//        }
         $bike_key = self::REDIS_BIKE_LOCATION_TAG . ":{$merchant_id}";
         self::$redis->geoadd($bike_key, $lng, $lat, $box_no);
         return true;
@@ -191,9 +175,6 @@ class BikeStatusSync
      */
     public function toBikeOffLineStatus($box_no, $merchant_id = 1)
     {
-//        if (!$merchant_id) {
-//            $merchant_id = Bike::byBikeNoGetMerchantId($box_no);
-//        }
         $bike_key = self::REDIS_BIKE_LOCATION_TAG . ":{$merchant_id}";
         //删除未骑行状态
         self::$redis->zrem($bike_key, $box_no);
@@ -229,7 +210,8 @@ class BikeStatusSync
                     'lat' => 0,
                     'lng' => 0,
                     'spike' => '',
-                    'time' => 0
+                    'time' => 0,
+                    'isHelmetUnlock' => 0
                 ];
             } else {
                 $upLocation = $this->decodeData($upLocation);
@@ -242,7 +224,8 @@ class BikeStatusSync
                     'lat' => 0,
                     'lng' => 0,
                     'mileage' => $location['mileage'],
-                    'time' => 0
+                    'time' => 0,
+                    'isHelmetUnlock' => 0
                 ];
             } else {
                 $location = $this->decodeData($location);
@@ -253,7 +236,8 @@ class BikeStatusSync
                     'lng' => $upLocation['lng'],
                     'mileage' => $location['mileage'],
                     'spike' => $upLocation['spike'],
-                    'time' => $upLocation['time']
+                    'time' => $upLocation['time'],
+                    'isHelmetUnlock' => $upLocation['isHelmetUn']
                 ];
             }
 
@@ -262,7 +246,8 @@ class BikeStatusSync
                 'lng' => $location['lng'],
                 'mileage' => $location['mileage'],
                 'spike' => $upLocation['spike'],
-                'time' => $location['time']
+                'time' => $location['time'],
+                'isHelmetUnlock' => $location['isHelmetUn']
             ];
         } catch (\Exception $exception) {
             return [
@@ -270,7 +255,8 @@ class BikeStatusSync
                 'lng' => 0,
                 'mileage' => 0,
                 'spike' => 0,
-                'time' => 0
+                'time' => 0,
+                'isHelmetUnlock' => 0
             ];
         }
     }
