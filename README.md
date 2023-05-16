@@ -4,10 +4,28 @@
 
 
 ## Installing
-
+### 方式一
 ```shell
 $ composer require zh-mead/xmnk-bike-control-shandong -vvv
 ```
+### 方式二
+声明自动加载
+接下来我们需要在 composer.json 中声明包自动加载的命名空间
+~~~
+{
+    .
+    .
+    .
+    "autoload": {
+        "psr-4": {
+            "ZhMead\\XmnkBikeControl\\": "./src/"
+        }
+    },
+    .
+    .
+    .
+}
+~~~
 
 ## Usage
 ~~~php
