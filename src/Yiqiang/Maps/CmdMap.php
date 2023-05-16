@@ -107,7 +107,7 @@ class CmdMap
     const COMMAND_CONTROLLER_SYSTEM_LOCK = 82;
 
     //开关头盔锁(cmd:82)
-    //const COMMAND_SWITCH_HELMET_LOCK = 82;
+//    const COMMAND_SWITCH_HELMET_LOCK = 82;
 
     //电摩控制器用户锁车(cmd:83)
     const COMMAND_CONTROLLER_USER_LOCK = 83;
