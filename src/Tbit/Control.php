@@ -448,13 +448,12 @@ class Control implements ControlInterface
 
             if ($isSync) {
                 //是否获取相应
-                $redis = $this->redis;
                 $response = false;
 
                 for ($i = 0; $i <= 30; $i++) {
                     sleep(1);
                     if ($this->isDev) var_dump($i);
-                    $data = $redis->get(BaseMap::CACHE_KEY . ':' . $msgId);
+                    $data = $this->bikeStatusSync->getBikeBoxInfo(':' . $msgId);
                     if ($data) {
                         $response = $this->decodeData($data);
                         break;
@@ -498,7 +497,7 @@ class Control implements ControlInterface
             'type' => $type,
             'cmd' => $cmd,
         ];
-        $msg_id = self::SPLIT_TAG . bin2hex(implode(',', $msg));
+        $msg_id = bin2hex(implode(',', $msg));
         return $msg_id;
     }
 
@@ -516,7 +515,7 @@ class Control implements ControlInterface
         }
         $body = [
             "{$controller_cmd}",
-            "{$msgID}"
+            self::SPLIT_TAG . "{$msgID}"
         ];
         $body = $this->arr2arr($body);
 
