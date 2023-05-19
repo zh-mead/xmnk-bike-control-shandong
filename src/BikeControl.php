@@ -105,12 +105,22 @@ class BikeControl
 
         $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {
-            $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
-            $this->controlKeys[] = DeviceMap::TBit;
+            try {
+                $this->controls[DeviceMap::TBit] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+                $this->controlKeys[] = DeviceMap::TBit;
+            } catch (\Exception $exception) {
+                $this->controls[DeviceMap::TBit] = $exception->getMessage();
+                $this->controlKeys[] = DeviceMap::TBit;
+            }
         }
         if (array_key_exists(DeviceMap::XiaoAn, $gateways)) {
-            $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
-            $this->controlKeys[] = DeviceMap::XiaoAn;
+            try {
+                $this->controls[DeviceMap::XiaoAn] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+                $this->controlKeys[] = DeviceMap::XiaoAn;
+            } catch (\Exception $exception) {
+                $this->controls[DeviceMap::XiaoAn] = $exception->getMessage();
+                $this->controlKeys[] = DeviceMap::XiaoAn;
+            }
         }
 
         if (array_key_exists('numGatewayMaps', $configs)) $this->controlKeys = $configs['numGatewayMaps'];
