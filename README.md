@@ -58,5 +58,24 @@ $config = [
 ];
 
 $bikeControl = new XmnkBikeControl\BikeControl($config);
-$bikeControl->device(DeviceMap::XiaoAn)->bell('2011550024');
+$bikeControl->device(DeviceMap::XiaoAn)->bell('2011550024');//寻铃
+$bikeControl->device(DeviceMap::XiaoAn)->open('2011550024',[
+    'id' => $order->id,//订单id
+    'bike_id' => $order->bike_id,//车辆id
+    'area_id' => $order->area_id//车辆所在区域id
+]);//开锁
+$bikeControl->device(DeviceMap::XiaoAn)->closeLock('2011550024');//关锁
+$bikeControl->device(DeviceMap::XiaoAn)->temporaryCloseLock('2011550024');//临时关锁
+$bikeControl->device(DeviceMap::XiaoAn)->temporaryOpenLock('2011550024');//临时开锁
+$bikeControl->device(DeviceMap::XiaoAn)->openBatteryLock('2011550024');//打开电池仓
+$bikeControl->device(DeviceMap::XiaoAn)->outAreaPlayVideo('2011550024');//播放超区语音【中继端会自动播放】
+$bikeControl->device(DeviceMap::XiaoAn)->playVideo('2011550024','01');//播放语音【01:语音指令】
+$bikeControl->device(DeviceMap::XiaoAn)->outAreaLoseElectric('2011550024');//超区失能【中继端会自动播放】
+$bikeControl->device(DeviceMap::XiaoAn)->outAreaGetElectric('2011550024');//进区加电【中继端会自动播放】
+$bikeControl->device(DeviceMap::XiaoAn)->closeLowElectricLimit('2011550024');//关闭低电量限制
+$bikeControl->device(DeviceMap::XiaoAn)->rebootBox('2011550024');//重启中控
+$bikeControl->device(DeviceMap::XiaoAn)->nowBikeLocation('2011550024');//立即定位
+$bikeControl->device(DeviceMap::XiaoAn)->nowBikeBatteryMSG('2011550024');//立即更新电量
+
+
 ~~~
