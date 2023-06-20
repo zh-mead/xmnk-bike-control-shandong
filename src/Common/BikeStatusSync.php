@@ -247,7 +247,7 @@ class BikeStatusSync
                 'mileage' => $location['mileage'],
                 'spike' => $upLocation['spike'],
                 'time' => $location['time'],
-                'isHelmetUnlock' => $location['isHelmetUn']
+                'isHelmetUnlock' => $location['isHelmetUnlock']
             ];
         } catch (\Exception $exception) {
             return [
