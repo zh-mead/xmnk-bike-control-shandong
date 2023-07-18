@@ -211,7 +211,8 @@ class BikeStatusSync
                     'lng' => 0,
                     'spike' => '',
                     'time' => 0,
-                    'isHelmetUnlock' => 0
+                    'isHelmetUnlock' => 0,
+                    'isRFID' => 0
                 ];
             } else {
                 $upLocation = $this->decodeData($upLocation);
@@ -225,7 +226,8 @@ class BikeStatusSync
                     'lng' => 0,
                     'mileage' => $location['mileage'],
                     'time' => 0,
-                    'isHelmetUnlock' => 0
+                    'isHelmetUnlock' => 0,
+                    'isRFID' => 0
                 ];
             } else {
                 $location = $this->decodeData($location);
@@ -237,7 +239,8 @@ class BikeStatusSync
                     'mileage' => $location['mileage'],
                     'spike' => $upLocation['spike'],
                     'time' => $upLocation['time'],
-                    'isHelmetUnlock' => $upLocation['isHelmetUn']
+                    'isHelmetUnlock' => $upLocation['isHelmetUn'],
+                    'isRFID' => $location['isRFID']
                 ];
             }
 
@@ -247,7 +250,8 @@ class BikeStatusSync
                 'mileage' => $location['mileage'],
                 'spike' => $upLocation['spike'],
                 'time' => $location['time'],
-                'isHelmetUnlock' => $location['isHelmetUnlock']
+                'isHelmetUnlock' => $location['isHelmetUnlock'],
+                'isRFID' => $location['isRFID']
             ];
         } catch (\Exception $exception) {
             return [
@@ -256,7 +260,8 @@ class BikeStatusSync
                 'mileage' => 0,
                 'spike' => 0,
                 'time' => 0,
-                'isHelmetUnlock' => 0
+                'isHelmetUnlock' => 0,
+                'isRFID' => 0
             ];
         }
     }
