@@ -447,21 +447,24 @@ class Control implements ControlInterface
     {
         $cmd = CmdMap::COMMAND_SET_INTERNAL_PARAMETERS;
 
-        $param[] = [];
+        $param[] = $setting;
         if (array_key_exists('freq', $setting)) {
             $param['freq_move'] = $setting['freq'];
+            unset($setting['freq']);
         }
 
         if (array_key_exists('server', $setting)) {
             $p['server'] = $setting['server'];
 //            self::send($box_no, CmdMap::COMMAND_MODIFY_SERVER_ADDRESS, $p);
             $this->setBoxServerUrl($box_no, $p['server']);
+            unset($setting['server']);
         }
 
         if (array_key_exists('maxecuspeed', $setting)) {
             $index = 7;
             $p2['speed'] = 100 - ($index - $setting['maxecuspeed']) * 5;
             $this->setBikeSpeedLimit($box_no, $p2['speed']);
+            unset($setting['maxecuspeed']);
 //            self::setBikeSpeedLimit($box_no, CmdMap::COMMAND_SET_CONTROLLER_SPEED_LIMIT, $p2);
         }
 
