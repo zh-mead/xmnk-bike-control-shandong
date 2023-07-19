@@ -447,7 +447,7 @@ class Control implements ControlInterface
     {
         $cmd = CmdMap::COMMAND_SET_INTERNAL_PARAMETERS;
 
-        $param[] = $setting;
+        $param = $setting;
         if (array_key_exists('freq', $setting)) {
             $param['freq_move'] = $setting['freq'];
             unset($setting['freq']);
