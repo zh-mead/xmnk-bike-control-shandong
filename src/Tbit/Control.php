@@ -435,7 +435,6 @@ class Control implements ControlInterface
      */
     public function sendCustomParam($box_no, $cmd, $param, $isSync = -1)
     {
-        $param = ['DEVICESTATUS', 'PHASESTATUS'];
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, $cmd);
         $str = $this->makeSendMsg($param, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
         return $this->send($box_no, $str, $isSync, $msg_id);
