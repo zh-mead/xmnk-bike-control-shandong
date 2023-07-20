@@ -53,6 +53,7 @@ $config = [
     ],
     'isSyncCmd' => false,
     'isAutoBikeStatusSync' => true,
+    'addressesCacheDisable' => false,
     'userRoleTag' => UserRoleMap::USER,
     'isDev' => true,
 ];
