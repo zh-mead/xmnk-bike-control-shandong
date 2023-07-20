@@ -100,9 +100,11 @@ class BikeControl
         $this->bikeStatusSyncModel = $bikeStatusSync;
 
         $otherConfig = [
-            'isAutoBikeStatusSync' => true
+            'isAutoBikeStatusSync' => true,
+            'addressesCacheDisable' => false,
         ];
         if (array_key_exists('isAutoBikeStatusSync', $configs)) $otherConfig['isAutoBikeStatusSync'] = $configs['isAutoBikeStatusSync'];
+        if (array_key_exists('addressesCacheDisable', $configs)) $otherConfig['addressesCacheDisable'] = $configs['addressesCacheDisable'];
 
         $gateways = $configs['registerGateways'];
         if (array_key_exists(DeviceMap::TBit, $gateways)) {

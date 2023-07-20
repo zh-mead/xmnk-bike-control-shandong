@@ -27,6 +27,7 @@ return [
     ],
     'isSyncCmd' => false,
     'isAutoBikeStatusSync' => true,
+    'addressesCacheDisable' => true,
     'userRoleTag' => UserRoleMap::USER,
     'isDev' => false,
 ];

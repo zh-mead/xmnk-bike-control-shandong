@@ -21,6 +21,7 @@ class Control implements ControlInterface
     public $userRoleTag = 'user';
     public $isDev = false;
     public $isAutoBikeStatusSync = false;
+    public $addressesCacheDisable = false;
 
     public function __construct($config, $bikeStatusSync, $isSync = false, $userRoleTag = UserRoleMap::USER, $otherConfig = [], $isDev = false)
     {
@@ -30,6 +31,7 @@ class Control implements ControlInterface
         $this->bikeStatusSync = $bikeStatusSync;
         $this->isDev = $isDev;
         $this->isAutoBikeStatusSync = $otherConfig['isAutoBikeStatusSync'];
+        if (array_key_exists('addressesCacheDisable', $otherConfig)) $this->addressesCacheDisable = $otherConfig['addressesCacheDisable'];
     }
 
     /**
@@ -532,6 +534,7 @@ class Control implements ControlInterface
         $msg_id = self::getRandHex();
         $msg = self::encode($cmd, $param, $msg_id);
 
+        Gateway::$addressesCacheDisable = $this->addressesCacheDisable;
         Gateway::$registerAddress = $this->registerAddress;
         if (!Gateway::isUidOnline($box_no)) return false;
 
