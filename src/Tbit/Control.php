@@ -280,9 +280,9 @@ class Control implements ControlInterface
      */
     public function selectBoxSetting($box_no, $setting = [], $isSync = -1)
     {
-        if (!count($setting)) $select = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
+        if (!count($setting)) $setting = ['TID', 'AUTOLOCKEVENT', 'BLEKG', 'BATMANUFACTURE', 'DFTBLEBONDKEY', 'BATSN', 'DOMAIN', 'BLEKG', 'PULSE', 'VIBFILTERREMINDT', 'FREQ'];
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CMD_REMOTE_SELECT);
-        $str = $this->makeSendMsg($select, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
+        $str = $this->makeSendMsg($setting, $msg_id, CmdMap::CMD_REMOTE_SELECT, false);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
