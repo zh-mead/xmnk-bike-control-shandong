@@ -410,7 +410,7 @@ class Control implements ControlInterface
      */
     public function setBoxServerUrl($box_no, $server = '', $isSync = -1)
     {
-        return $this->setBoxSetting($box_no, ['server' => $server], true);
+        return $this->setBoxSetting($box_no, ["server={$server}"], true);
     }
 
     /**
@@ -423,7 +423,7 @@ class Control implements ControlInterface
      */
     public function setBikeSpeedLimit($box_no, $speed = 7, $isSync = -1)
     {
-        return $this->setBoxSetting($box_no, ['maxecuspeed' => $speed], true);
+        return $this->setBoxSetting($box_no, ["maxecuspeed={$speed}"], true);
     }
 
     /**
