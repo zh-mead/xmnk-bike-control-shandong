@@ -119,7 +119,7 @@ class BikeControl
 
         if (array_key_exists(DeviceMap::TBitDan, $gateways)) {
             try {
-                $this->controls[DeviceMap::TBitDan] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBit], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+                $this->controls[DeviceMap::TBitDan] = new \ZhMead\XmnkBikeControl\Tbit\Control($gateways[DeviceMap::TBitDan], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
                 $this->controlKeys[] = DeviceMap::TBitDan;
             } catch (\Exception $exception) {
                 $this->controls[DeviceMap::TBitDan] = $exception->getMessage();
@@ -139,7 +139,7 @@ class BikeControl
 
         if (array_key_exists(DeviceMap::XiaoAnDan, $gateways)) {
             try {
-                $this->controls[DeviceMap::XiaoAnDan] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAn], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
+                $this->controls[DeviceMap::XiaoAnDan] = new \ZhMead\XmnkBikeControl\Xiaoan\Control($gateways[DeviceMap::XiaoAnDan], $bikeStatusSync, $isSyncCmd, $userRoleTag, $otherConfig, $isDev);
                 $this->controlKeys[] = DeviceMap::XiaoAnDan;
             } catch (\Exception $exception) {
                 $this->controls[DeviceMap::XiaoAnDan] = $exception->getMessage();
