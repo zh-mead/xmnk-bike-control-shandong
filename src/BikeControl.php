@@ -11,7 +11,9 @@ use ZhMead\XmnkBikeControl\Common\Maps\UserRoleMap;
  * 车辆控制
  * @method bool bell(string $box_no, bool $isSync = false)
  * @method bool openLock(string $box_no, $cacheOtherData = [], bool $isSync = false)
+ * @method bool openLockDan(string $box_no, $cacheOtherData = [], bool $isSync = false)
  * @method bool closeLock(string $box_no, bool $isSync = false)
+ * @method bool closeLockDan(string $box_no, bool $isSync = false)
  * @method bool temporaryCloseLock(string $box_no, bool $isSync = false)
  * @method bool temporaryOpenLock(string $box_no, bool $isSync = false)
  * @method bool openBatteryLock(string $box_no, bool $isSync = false)
@@ -146,7 +148,6 @@ class BikeControl
                 $this->controlKeys[] = DeviceMap::XiaoAnDan;
             }
         }
-
         if (array_key_exists('numGatewayMaps', $configs)) $this->controlKeys = $configs['numGatewayMaps'];
 
         if (!count($this->controlKeys)) {
@@ -155,7 +156,6 @@ class BikeControl
 
         if (!array_key_exists('defaultGateway', $configs)) $configs['defaultGateway'] = $this->controlKeys[0];
         $this->defaultGateway = $configs['defaultGateway'];
-
         return $this;
     }
 
@@ -177,6 +177,7 @@ class BikeControl
         if (!count($this->controlKeys)) throw new \Exception('必须配置一个中控');
 
         $this->control = $this->controls[$type];
+//        print_r($this->control);die();
         return $this;
     }
 

@@ -61,9 +61,58 @@ class Control implements ControlInterface
     {
         if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus($this->userRoleTag, $box_no, $cacheOtherData);
 
+
         $cmd = CmdMap::COMMAND_STARTORSTOP_VEHICLE;
         $param = [
             'acc' => 1
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+    /**
+     * Notes: 小安单车 开锁
+     * @param $box_no
+     * @param array $cacheOtherData
+     * @param int $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     * User: xiaopanpan
+     * Date: 2023/8/2 15:44
+     */
+    public function openLockDan($box_no, $cacheOtherData = [], $isSync = -1)
+    {
+        if (is_array($cacheOtherData) && $this->isAutoBikeStatusSync) $this->bikeStatusSync->toBikeRideStatus($this->userRoleTag, $box_no, $cacheOtherData);
+
+
+        $cmd = CmdMap::COMMAND_REARWHEEL_LOCK;
+        $param = [
+            'sw' => 0,
+            'idx' => 2
+        ];
+        return $this->send($box_no, $cmd, $param, $isSync);
+    }
+
+
+    /**
+     * Notes: 单车关锁
+     * @param $box_no
+     * @param int $isSync
+     * @return bool|mixed
+     * @throws \Exception
+     * User: xiaopanpan
+     * Date: 2023/8/2 16:01
+     */
+    public function closeLockDan($box_no, $isSync = -1)
+    {
+        if ($this->isAutoBikeStatusSync) {
+            $location = $this->bikeStatusSync->byBoxNoGetLocation($box_no);
+            $this->bikeStatusSync->toBikeWaitRideStatus($box_no, $location['lat'], $location['lng']);
+        }
+
+        $cmd = CmdMap::COMMAND_REARWHEEL_LOCK;
+        $param = [
+            'sw' => 1,
+            'idx' => 1
         ];
         return $this->send($box_no, $cmd, $param, $isSync);
     }
