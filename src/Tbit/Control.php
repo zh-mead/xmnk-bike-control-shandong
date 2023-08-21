@@ -205,7 +205,7 @@ class Control implements ControlInterface
     public function openHelmet($box_no, $isSync = -1)
     {
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_OPEN_BACKSEAT);
-        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_BACKSEAT, $msg_id);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_OPEN_HUB_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
@@ -219,7 +219,7 @@ class Control implements ControlInterface
     public function closeHelmet($box_no, $isSync = -1)
     {
         $msg_id = $this->makeMsgId($box_no, $this->userRoleTag, CmdMap::CONTROL_REMOTE_CLOSE_BACKSEAT);
-        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_BACKSEAT, $msg_id);
+        $str = $this->makeSendMsg(CmdMap::CONTROL_REMOTE_CLOSE_HUB_LOCK, $msg_id);
         return $this->send($box_no, $str, $isSync, $msg_id);
     }
 
